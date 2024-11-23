@@ -44,7 +44,6 @@ const ImageViewer = ({ imageUrl, zoom }: { imageUrl: string; zoom: number }) => 
 
 export const TabView = ({ imageUrl, problemStatement }: TabViewProps) => {
     const [zoom, setZoom] = useState(1);
-
     return (
         <Tabs defaultValue="document" className="flex-1 flex flex-col h-full">
             <div className="h-14 border-b border-gray-200 flex items-center justify-between bg-white">
