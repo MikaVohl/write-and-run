@@ -31,23 +31,24 @@ const SessionDashboard = () => {
     useEffect(() => {
         const getSignedUrl = async () => {
             if (sessionImage && session?.user_id) {
-                const filePath = `${session.user_id}/${sessionImage.id}`;
+                const filePath = `${session.user_id}/${sessionImage.id}.png`;
 
                 const { data, error } = await supabase
                     .storage
                     .from('code-images')
                     .createSignedUrl(filePath, 3600); // 1 hour expiry
 
-                console.log(JSON.stringify({ img_url: data!.signedUrl + '.png' }));
+                // console.log(JSON.stringify({ img_url: data!.signedUrl + '.png' }));
                 if (session?.detected_code == null) {
                     fetch('http://localhost:5001/api/imgtocode', {
-                        method: 'POST', body: JSON.stringify({ img_url: data!.signedUrl + '.png' }), headers: {
+                        method: 'POST', body: JSON.stringify({ img_url: data!.signedUrl + sessionImage.ext  }), headers: {
                             "Content-Type": "application/json",
                             mode: 'no-cors',
 
                         }
                     }).then((response) => {
                         console.log(response);
+                        console.log(JSON.parse(response.body as any));
                         setEditorCode((response as any)['code']);
                     });
                 }

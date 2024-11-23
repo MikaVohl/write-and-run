@@ -108,7 +108,8 @@ const UploadComponent = () => {
         const sessionId = crypto.randomUUID();
         const imageId = crypto.randomUUID();
         // Create file path with user folder structure
-        const filePath = `${user.id}/${imageId}`;
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${user.id}/${imageId}${fileExt ? `.${fileExt}` : ''}`;
 
         try {
             // Upload to storage
@@ -140,6 +141,7 @@ const UploadComponent = () => {
                     id: imageId, // Use the same ID that we used for the filename
                     name: file.name, // Store the original filename
                     type: file.type,
+                    ext: fileExt,
                     size: file.size,
                     session_id: sessionId,
                     uploaded_by: user.id
