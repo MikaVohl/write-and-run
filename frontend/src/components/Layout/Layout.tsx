@@ -21,16 +21,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
     return (
         <div
-            className="flex h-screen bg-white" // Main background
+            className="flex h-screen bg-white"
             style={{
                 '--sidebar-width': isSidebarExpanded ? '280px' : '64px',
             } as React.CSSProperties}
         >
             <aside
                 className={cn(
-                    "bg-gray-50 h-full", // Sidebar background
+                    "bg-gray-50 h-full",
                     "transition-all duration-200",
-                    "border-r border-gray-200", // Subtle border
+                    "border-r border-gray-200",
                     "flex flex-col",
                     isSidebarExpanded ? "w-[280px]" : "w-16"
                 )}
@@ -71,18 +71,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                     </div>
                 </nav>
 
-                <Separator className="bg-neutral-800" />
+                <Separator className="bg-gray-200" />
 
                 {/* User Profile Section */}
                 {user && (
-                    <div className="p-3">
+                    <div className="p-3 bg-white border-t border-gray-200">
                         <div className={cn(
                             "flex items-center gap-3 p-2 rounded-lg",
-                            "hover:bg-neutral-800/50 transition-all duration-200",
+                            "hover:bg-gray-100 transition-all duration-200",
                             !isSidebarExpanded && "justify-center"
                         )}>
                             <div className="relative">
-                                <div className="w-8 h-8 rounded-full bg-neutral-700 flex items-center justify-center overflow-hidden">
+                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                                     {user.user_metadata?.avatar_url ? (
                                         <img
                                             src={user.user_metadata.avatar_url}
@@ -90,17 +90,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                             className="w-full h-full object-cover"
                                         />
                                     ) : (
-                                        <Icons.user className="w-4 h-4 text-neutral-300" />
+                                        <Icons.user className="w-4 h-4 text-gray-500" />
                                     )}
                                 </div>
-                                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-[#252525]" />
+                                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
                             </div>
                             {isSidebarExpanded && (
                                 <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-neutral-100 truncate">
+                                    <p className="text-sm font-medium text-gray-900 truncate">
                                         {user.user_metadata?.full_name || user.email}
                                     </p>
-                                    <p className="text-xs text-neutral-400 truncate">
+                                    <p className="text-xs text-gray-500 truncate">
                                         {user.email}
                                     </p>
                                 </div>
@@ -110,7 +110,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                                     variant="ghost"
                                     size="icon"
                                     onClick={signOut}
-                                    className="h-8 w-8 text-neutral-400 hover:text-neutral-100"
+                                    className="h-8 w-8 text-gray-500 hover:text-gray-700"
                                 >
                                     <Icons.logOut className="h-4 w-4" />
                                 </Button>
@@ -120,7 +120,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
             </aside>
 
-            <main className="flex-1 flex flex-col min-w-0">
+            <main className="flex-1 flex flex-col min-w-0 bg-white">
                 <div className="flex-1 h-full">
                     {children}
                 </div>
