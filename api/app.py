@@ -15,9 +15,19 @@ def home():
 @app.route('/api/imgtocode', methods=['POST'])
 def imgtocode():
     json = request.json
-    image_url = json['image_url']
-    code = request_code(image_url)
-    code, language = request_code(image_url)
+    if 'img_url' not in json and 'img_base64' not in json:
+        return jsonify({'error': 'Missing img_url or img_base64'}), 400
+    
+    img_url = json.get('img_url')
+    img_base64 = json.get('img_base64')
+    
+    if img_url:
+        code, language = request_code(img_url=img_url)
+    elif img_base64:
+        code, language = request_code(img_base64=img_base64)
+    else:
+        return jsonify({'error': 'Invalid input'}), 400
+    
     response = {
         'code': code,
         'language': language,
