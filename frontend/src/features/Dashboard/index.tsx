@@ -1,40 +1,34 @@
 import { useSession, useSessionImage } from "@/api";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CodeEditorSection } from "./components/CodeEditor";
 import { CompilerOutput } from "./components/CompilerOutput";
 import { LoadingState } from "./components/LoadingState";
 import { TabView } from "./components/TabView";
-import { useSessionManager } from "./hooks/useSessionManager";
-import { Language } from "@/types/types";
+// import { Language } from "@/types/types";
 import { useCompiler } from "./hooks/useCompiler";
 import { useImageProcessing } from "./hooks/useImageProcessing";
-import { useTestGeneration } from "./hooks/useTestGeneration";
 import { LanguageDrop } from "./components/LanguageDropdown";
+import { supabase } from '@/supabaseClient';
 
 const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const apiUrl = import.meta.env.VITE_API_URL;
+  const queryClient = useQueryClient();
 
+  // Session and Image Queries
   const {
     data: session,
     isLoading: isSessionLoading,
-    error: sessionError
   } = useSession(sessionId!);
 
   const {
     data: sessionImage,
     isLoading: isImageLoading,
-    error: imageError
   } = useSessionImage(sessionId!);
 
-  const {
-    editorCode,
-    setEditorCode,
-    updateSession
-  } = useSessionManager(sessionId!);
-
+  // Compiler State
   const {
     compilerOutput,
     isCompiling,
@@ -43,52 +37,95 @@ const SessionDashboard = () => {
     compile
   } = useCompiler();
 
-  const { imageUrl } = useImageProcessing({
+  // Image Processing
+  const { imageUrl, isProcessing, error: processingError } = useImageProcessing({
     session,
     sessionImage,
-    onCodeDetected: setEditorCode,
-    onUpdateSession: updateSession
   });
 
-  const { generateTests } = useTestGeneration({
-    apiUrl,
-    onNewCode: setEditorCode
-  });
+  // Session Update Mutation
+  const updateSessionMutation = useMutation({
+    mutationFn: async ({ field, value }: { field: string, value: any }) => {
+      const { error } = await supabase
+        .from('sessions')
+        .update({ [field]: value })
+        .eq('id', sessionId!);
 
-  // Effects
-  useEffect(() => {
-    if (session?.code && !editorCode) {
-        console.log('Setting editor code:', session.code);
-      setEditorCode(session.code);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sessions', sessionId] });
+    },
+    onError: (error) => {
+      console.error('Error updating session:', error);
     }
-  }, [session, setEditorCode]);
+  });
 
-  // Event handlers
-  const handleMakeTests = async () => {
-    console.log('Generating tests...');
-    if (!session?.language) return;
-    try {
-      await generateTests(editorCode, session.language as Language);
-    } catch (error) {
+  // Tests Generation Mutation
+  const generateTestsMutation = useMutation({
+    mutationFn: async (code: string) => {
+      if (!session?.language) throw new Error('No language selected');
+
+      const response = await fetch(`${apiUrl}generatetests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code,
+          language: session.language.toLowerCase(),
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to generate tests');
+      return response.json();
+    },
+    onSuccess: async (data) => {
+      await updateSessionMutation.mutateAsync({
+        field: 'code',
+        value: data.code
+      });
+    },
+    onError: (error) => {
       console.error('Failed to generate tests:', error);
     }
-  };
+  });
 
-  const handleRunClick = () => { 
-    compile({
-      code: editorCode,
-      language: session?.language || Language.python
+  // Event Handlers
+  const handleCodeChange = async (code: string) => {
+    await updateSessionMutation.mutateAsync({
+      field: 'code',
+      value: code
     });
   };
 
-  const handleLanguageChange = (language: LanguageDrop) => {
-    console.log('Language selected in grandparent:', language);
-    updateSession({language: language.id }); // Update state or handle as needed
+  const handleLanguageChange = async (language: LanguageDrop) => {
+    await updateSessionMutation.mutateAsync({
+      field: 'language',
+      value: language.id
+    });
   };
 
-  // Loading state
+  const handleRunClick = () => {
+    if (!session?.language) return;
+    compile({
+      code: session.code!,
+      language: session.language
+    });
+  };
+
+  const handleMakeTests = () => {
+    if (!session?.code) return;
+    generateTestsMutation.mutate(session.code);
+  };
+
+  // Loading States
   if (isSessionLoading || isImageLoading) {
     return <LoadingState />;
+  }
+
+  // Error States
+  if (processingError) {
+    console.error('Image processing error:', processingError);
+    // You might want to show an error UI here
   }
 
   return (
@@ -107,11 +144,11 @@ const SessionDashboard = () => {
         </div>
         <div className="h-full overflow-hidden">
           <CodeEditorSection
-            handleLanguageSelect={handleLanguageChange} // Add this line
-            language={session?.language || 'Upload to detect language'}
-            code={editorCode}
-            isCompiling={isCompiling}
-            onCodeChange={setEditorCode}
+            handleLanguageSelect={handleLanguageChange}
+            language={session?.language!}
+            code={session?.code || ''}
+            isCompiling={isCompiling || isProcessing}
+            onCodeChange={handleCodeChange}
             onRun={handleRunClick}
             makeTests={handleMakeTests}
           />
@@ -124,7 +161,6 @@ const SessionDashboard = () => {
       />
     </div>
   );
-
 };
 
 export default SessionDashboard;
