@@ -7,6 +7,7 @@ interface CodeEditorSectionProps {
     isCompiling: boolean;
     onCodeChange: (code: string) => void;
     onRun: () => void;
+    makeTests: () => void;
 }
 
 export const CodeEditorSection = ({
@@ -14,7 +15,8 @@ export const CodeEditorSection = ({
     code,
     isCompiling,
     onCodeChange,
-    onRun
+    onRun,
+    makeTests
 }: CodeEditorSectionProps) => {
     return (
         <div className="flex flex-col h-full">
@@ -30,10 +32,11 @@ export const CodeEditorSection = ({
                         Run
                     </Button>
                     <Button
+                        onClick={makeTests}
                         variant="outline"
                         size="sm"
                     >
-                        More Tests
+                        Generate Tests
                     </Button>
                 </div>
             </div>
