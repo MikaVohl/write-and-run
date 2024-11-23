@@ -1,4 +1,5 @@
 import { Language } from '@/types/types';
+import { useState } from 'react';
 
 interface UseTestGenerationProps {
     apiUrl: string;
@@ -6,7 +7,9 @@ interface UseTestGenerationProps {
 }
 
 export const useTestGeneration = ({ apiUrl, onNewCode }: UseTestGenerationProps) => {
+    const [isGenerating, setIsGenerating] = useState<boolean>(false);
     const generateTests = async (code: string, language: Language) => {
+        setIsGenerating(true);
         try {
             const response = await fetch(`${apiUrl}generatetests`, {
                 method: 'POST',
@@ -27,8 +30,10 @@ export const useTestGeneration = ({ apiUrl, onNewCode }: UseTestGenerationProps)
         } catch (error) {
             console.error('Error generating tests:', error);
             throw error;
+        } finally {
+            setIsGenerating(false);
         }
     };
 
-    return { generateTests };
+    return { generateTests, isGenerating };
 };
