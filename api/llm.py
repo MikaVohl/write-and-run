@@ -1,5 +1,6 @@
 import sys
 from openai import OpenAI
+import json
 
 client = OpenAI()
 
@@ -12,26 +13,33 @@ def request_code(img_url=None, img_base64=None):
     
     # Define the structured prompt with instructions
     system_instruction = """
-    You are an assistant tasked with transcribing code from images into a specific format for educational purposes. Adhere strictly to the formatting guidelines:
+    You are an assistant tasked with transcribing code from images into a specific JSON format for educational purposes. Adhere strictly to the formatting guidelines:
     1. Identify the programming language (either C, Bash, Java, or Python).
-    2. Bold the programming language name in markdown (e.g., **Python**).
-    3. Provide the extracted code in a language-agnostic markdown code block (denoted using triple backticks without a language specifier).
-    4. Add a short description (3-8 words) describing the programming concept of the code (e.g., "Socket Programming in C").
-    5. Do not use language-specific annotations (e.g., `python` in code block headers). The markdown code block must remain language-agnostic.
-    6. Fix any transcription errors that could reasonably be misinterpreted when converting.
+    2. Extract the code and transcribe it accurately, fixing any transcription errors that could reasonably be misinterpreted when converting.
+    3. Describe the programming concept of the code in 3-8 words.
+    4. Summarize the functionality of the code in 1-5 words.
+
+    Return the output in the following JSON format:
+    {
+        "language": "<language name>",
+        "code": "<code as a single string>",
+        "concept": "<short description of the programming concept>",
+        "summary": "<short functionality summary>"
+    }
     """
 
     # Define user input (image description or relevant information)
     user_prompt = """
-    Please transcribe the content of this image into code. 
-    Return only the following:
-    1. The name of the coding language used (either C, Bash, Java, or Python), bolded in markdown.
-    2. A markdown code block containing the extracted code. Use triple backticks **without any language specifier**.
-    3. A short sentence (1-5 words) describing the programming concept (e.g., "Socket Programming", "Memory Manipulation", "Recursion").
-    Ensure the output adheres to this format:
-    **Language Name**
-    ```<Code here>```<Short description of the coding concept used>
-    Fix any errors that are ambiguous to a grader. """
+    Please transcribe the content of this image into code.
+    Return the output in this specific JSON format in plaintext, with no markdown formatting (no triple backticks):
+    {
+        "language": "<language name>",
+        "code": "<code as a single string>",
+        "concept": "<short description of the programming concept>",
+        "summary": "<short functionality summary>"
+    }
+    Fix any errors that could cause ambiguity or misinterpretation.
+    """
 
     messages = [
         {
@@ -55,13 +63,29 @@ def request_code(img_url=None, img_base64=None):
     )
 
     if response.choices:
-        with open('last_response.txt', 'w') as f:
-            f.write(str(response.choices[0].message.content))
         content = response.choices[0].message.content
-        code = content.split("```")[1].strip()
-        language = content.split("**")[1].strip()
-        concept = content.split("```")[2].strip()
-        return code, language, concept
+        print(content)
+        # Parse the JSON content
+        try:
+            data = json.loads(content)
+
+            # Extract required fields with default values if keys are missing
+            language = data.get("language", "Unknown")
+            code = data.get("code", "")
+            concept = data.get("concept", "")
+            summary = data.get("summary", "")
+
+            # Optionally, you can perform additional validation here
+            if not language or not code:
+                raise ValueError("Essential fields are missing in the response.")
+
+            # Return the extracted values
+            return code, language, concept, summary
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON content: {e}")
+        except ValueError as e:
+            print(f"Error parsing JSON content: {e}")
+
     else:
         print("Error: No response received from the model.")
         sys.exit(1)
