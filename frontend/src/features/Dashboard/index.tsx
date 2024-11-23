@@ -3,6 +3,8 @@ import { Button } from '@/components/ui/button';
 import { Maximize2, RotateCcw, Share2 } from 'lucide-react';
 import CodeEditor from '@/components/CodeEditor/CodeEditor';
 import {useState} from 'react';
+import CompilerCode from '@/components/CompileCode/CompileCode';
+import Uploader from '@/components/Uploader/Uploader';
 
 interface SessionDashboardProps {
     imageUrl?: string;
@@ -29,38 +31,15 @@ int main() {
                 <div className="space-y-6">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
-                            <CardTitle>Your Upload</CardTitle>
-                            <div className="flex gap-2">
-                                <Button variant="outline" size="icon">
-                                    <Maximize2 className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="icon">
-                                    <RotateCcw className="h-4 w-4" />
-                                </Button>
-                                <Button variant="outline" size="icon">
-                                    <Share2 className="h-4 w-4" />
-                                </Button>
-                            </div>
+                          <Uploader/>
                         </CardHeader>
-                        <CardContent>
-                            <div className="rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
-                                <img
-                                    src={imageUrl}
-                                    alt="Original code"
-                                    className="w-full object-cover"
-                                />
-                            </div>
-                        </CardContent>
+        
                     </Card>
 
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Output</CardTitle>
-                        </CardHeader>
                         <CardContent>
-                            <pre className="bg-black text-green-400 p-4 rounded-lg font-mono text-sm whitespace-pre-wrap">
-                                {output}
-                            </pre>
+                            <CompilerCode compilerOutput={output} />
+
                         </CardContent>
                     </Card>
                 </div>
