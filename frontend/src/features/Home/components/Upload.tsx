@@ -141,7 +141,7 @@ const UploadComponent = () => {
                     id: imageId, // Use the same ID that we used for the filename
                     name: file.name, // Store the original filename
                     type: file.type,
-                    ext: fileExt,
+                    ext: fileExt || '',
                     size: file.size,
                     session_id: sessionId,
                     uploaded_by: user.id
