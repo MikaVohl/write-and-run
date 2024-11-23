@@ -38,6 +38,7 @@ const SessionDashboard = () => {
     compile
   } = useCompiler();
 
+
   // Image Processing
   const { imageUrl, isProcessing, error: processingError } = useImageProcessing({
     session,
