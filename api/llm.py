@@ -37,7 +37,7 @@ def request_code(img_url=None, img_base64=None):
         sys.exit(1)
 
 def generate_tests(code, language):
-    instructions = f"Given this following {language} code, add 3 useful test cases to the code. These test cases will run from the entry point of the code, and call the function in question. If the provided code is not a function, create a function that will be called by the test cases. Return the entire code block in a markdown code block, denoted using triple backtick, without the language. Do not return anything else."
+    instructions = f"Given this following {language} code, add 3 useful test cases to the code. These test cases will run from the outermost scope of the script, and call the function in question. If the provided code is not a function, create a function that will be called by the test cases. Return the entire code block in a markdown code block, denoted using triple backtick, without the language. Do not return anything else. Code: ```{code}```"
 
     messages = [
         {

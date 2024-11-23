@@ -56,8 +56,12 @@ def tests():
     if not code or not language:
         return jsonify({"error": "Both 'code' and 'language' are required fields."}), 400
 
-    output = generate_tests(code, language)
-    return jsonify(output), 201
+    code_out, language = generate_tests(code, language)
+    response = {
+        'code': code_out,
+        'language': language,
+    }
+    return jsonify(response), 201
 
 
 @app.route('/api/compile', methods=['POST'])
