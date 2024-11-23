@@ -104,24 +104,23 @@ const UploadComponent = () => {
         setUploadProgress(0);
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) throw new Error('User not authenticated');
-        const sessionId = crypto.randomUUID();
-        const documentId = crypto.randomUUID();
 
+        const sessionId = crypto.randomUUID();
+        const imageId = crypto.randomUUID();
         // Create file path with user folder structure
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${documentId}.${fileExt}`; // Just the document ID as filename
-        const filePath = `${user.id}/${fileName}`; // Put in user's folder
+        const filePath = `${user.id}/${imageId}`;
+
         try {
             // Upload to storage
-            setUploadProgress(30);
+            setUploadProgress(25);
             const { error: uploadError } = await supabase.storage
                 .from('code-images')
                 .upload(filePath, file, {
                     cacheControl: '3600',
                     upsert: false
                 });
-
             if (uploadError) throw uploadError;
+
             setUploadProgress(60);
 
             // Create session record
@@ -134,16 +133,17 @@ const UploadComponent = () => {
                 }]);
             if (sessionError) throw sessionError;
 
+            // Create image record using the same ID as the filename
             const { error: imageError } = await supabase
                 .from('session_image')
                 .insert([{
-                    name: fileName,
+                    id: imageId, // Use the same ID that we used for the filename
+                    name: file.name, // Store the original filename
                     type: file.type,
                     size: file.size,
                     session_id: sessionId,
                     uploaded_by: user.id
                 }]);
-
             if (imageError) throw imageError;
             setUploadProgress(100);
 
@@ -154,7 +154,7 @@ const UploadComponent = () => {
             if (file && user) {
                 await supabase.storage
                     .from('code-images')
-                    .remove([`${user.id}/${fileName}`])
+                    .remove([filePath])
                     .catch(e => console.error('Failed to cleanup file:', e));
             }
 

@@ -21,7 +21,7 @@ export const ReactQueryProvider: React.FC<ReactQueryProviderProps> = ({ children
     return (
         <QueryClientProvider client={queryClient}>
             {children}
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
     );
 };
