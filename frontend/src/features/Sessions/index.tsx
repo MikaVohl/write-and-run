@@ -106,7 +106,7 @@ const Sessions = () => {
                                             {capFirst(selectedLanguage)} 
                                         </SelectTrigger>
                                         <SelectContent>
-                                            <SelectItem value="all">Languages</SelectItem>
+                                            <SelectItem value="Languages">Languages</SelectItem>
                                             {languages.map((lang) => (
                                                 <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
                                                     {capFirst(lang)}
