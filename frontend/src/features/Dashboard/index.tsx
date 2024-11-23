@@ -65,6 +65,7 @@ const SessionDashboard = () => {
 
   // Event handlers
   const handleMakeTests = async () => {
+    console.log('Generating tests...');
     if (!session?.language) return;
     try {
       await generateTests(editorCode, session.language as Language);
