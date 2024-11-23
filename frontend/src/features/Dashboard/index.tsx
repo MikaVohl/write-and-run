@@ -118,10 +118,14 @@ const SessionDashboard = () => {
       });
 
       const data = await response.json();
-      if (response.ok) {
-        setCompilerOutput(data.stdout || "No output");
+      if (!(data.stdout == "")) {
+        setCompilerOutput(data.stdout|| "No output");
       } else {
-        setCompilerOutput(data.stderr || "Compilation error occurred");
+
+        const commaIndex = data.stderr.indexOf(","); // Find the position of the first comma
+        const rest = commaIndex !== -1 ? data.stderr.substring(commaIndex + 1).trim() : "";
+
+        setCompilerOutput( rest.trim() || "Compilation error occurred");
       }
     } catch (error) {
       console.error('Error occurred while compiling:', error);
