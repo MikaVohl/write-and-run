@@ -22,6 +22,7 @@ export const useTestGeneration = ({ apiUrl, onNewCode }: UseTestGenerationProps)
             }
 
             const data = await response.json();
+            console.log(data);
             onNewCode(data.code);
         } catch (error) {
             console.error('Error generating tests:', error);
