@@ -2,11 +2,12 @@ import { useState, useCallback } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@radix-ui/react-progress';
-import { Upload } from 'lucide-react';
+import { CheckCircle2, Upload } from 'lucide-react';
 import { supabase } from '@/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import Prompt from './Prompt';
+import { cn } from '@/lib/utils';
 
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -20,14 +21,10 @@ const UploadComponent = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [imagePreview, setImagePreview] = useState('');
     const [file, setFile] = useState<File | null>(null);
-    const { toast } = useToast();
+    const [showSubmitAnimation, setShowSubmitAnimation] = useState(false);
 
-    const handlePromptSubmit = (content: string) => {
-        if (!file) return;
-        handleSubmit(file, content);
-  
-      };
-    
+
+    const { toast } = useToast();
 
     const validateFile = (file: File): boolean => {
         if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
@@ -50,8 +47,6 @@ const UploadComponent = () => {
 
         return true;
     };
-
-
 
     const handleSubmit = async (file: File, prompt: string) => {
         setIsLoading(true);
@@ -162,30 +157,79 @@ const UploadComponent = () => {
         setFile(file);
     };
 
+    const handlePromptSubmit = (content: string) => {
+        if (!file) return;
+        setShowSubmitAnimation(true);
+        setTimeout(() => {
+            handleSubmit(file, content);
+        }, 1500); // Duration of submission animation
+    };
+
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-8 space-y-8">
             {isLoading ? (
-                <div className="space-y-4 p-4">
-                    <div className="flex items-center justify-between text-sm">
-                        <span>Uploading image...</span>
-                        <span>{uploadProgress}%</span>
+                <div className="max-w-2xl mx-auto">
+                    <div className="rounded-xl p-8">
+                        <div className="space-y-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <Upload className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                    </div>
+                                    <div>
+                                        <h3 className="font-medium text-lg">Uploading image...</h3>
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">This might take a moment</p>
+                                    </div>
+                                </div>
+                                <span className="text-lg font-semibold text-blue-600 dark:text-blue-400">
+                                    {uploadProgress}%
+                                </span>
+                            </div>
+                            <div className="relative">
+                                <Progress
+                                    value={uploadProgress}
+                                    className="h-2 bg-blue-100 dark:bg-blue-900/50"
+                                />
+                                <div className="absolute top-3 w-full flex justify-between text-sm text-gray-500 dark:text-gray-400">
+                                    <span>Uploading</span>
+                                    <span>Processing</span>
+                                    <span>Completing</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <Progress value={uploadProgress} />
                 </div>
             ) : imagePreview ? (
-                <div className="space-y-6 transition-all duration-300">
-                    {/* Image Preview */}
-                    <div className="relative max-h-[400px] overflow-hidden rounded-lg">
-                        <img 
-                            src={imagePreview} 
-                            alt="Uploaded preview" 
-                            className="w-full object-contain"
-                        />
+                <div className="space-y-8 transition-all duration-300">
+                    <div className="dark:bg-neutral-900 rounded-xl overflow-hidden">
+                        <div className="relative w-full max-h-[60vh] overflow-auto">
+                            <div className="min-h-[300px] flex items-center justify-center p-6">
+                                <img
+                                    src={imagePreview}
+                                    alt="Uploaded preview"
+                                    className="max-w-full h-auto object-contain rounded-lg"
+                                    style={{
+                                        maxHeight: 'calc(60vh - 3rem)'
+                                    }}
+                                />
+                            </div>
+                        </div>
                     </div>
-                    
-                    {/* Prompt appears below the image */}
-                    <div className="transition-all duration-300 ease-in-out">
-                        <Prompt onSubmit={handlePromptSubmit}/>
+
+                    <div className="relative p-6">
+                        {showSubmitAnimation && (
+                            <div className="absolute inset-0 z-10 bg-white/80 dark:bg-neutral-900/80 flex items-center justify-center">
+                                <div className="animate-in zoom-in duration-300">
+                                    <div className="flex flex-col items-center gap-4">
+                                        <CheckCircle2 className="w-20 h-20 text-green-500 animate-bounce" />
+                                        <p className="text-lg font-medium text-gray-600 dark:text-gray-300">
+                                            Processing your code...
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        <Prompt onSubmit={handlePromptSubmit} />
                     </div>
                 </div>
             ) : (
@@ -195,15 +239,15 @@ const UploadComponent = () => {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     className={`
-                        relative overflow-hidden
-                        border-2 border-dashed rounded-lg p-12 py-40
-                        ${isDragging
+                    relative overflow-hidden
+                    border-2 border-dashed rounded-lg p-12 py-40
+                    ${isDragging
                             ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
                             : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:bg-blue-950/20'
                         }
-                        transition-all duration-300 ease-in-out
-                        cursor-pointer
-                    `}
+                    transition-all duration-300 ease-in-out
+                    cursor-pointer
+                `}
                 >
                     <input
                         type="file"

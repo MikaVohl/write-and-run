@@ -5,7 +5,7 @@ export const LoadingState = () => {
     return (
         <div className="flex flex-col h-full">
             {/* Main content */}
-            <div className="grid grid-cols-2 divide-x divide-neutral-800 bg-neutral-100 h-[calc(100%-300px)]">
+            <div className="grid grid-cols-2 divide-x divide-neutral-800 bg-neutral-100 h-[calc(100%-400px)]">
                 {/* Left side */}
                 <div className="flex flex-col h-full">
                     {/* Tabs and content */}
