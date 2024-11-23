@@ -1,24 +1,24 @@
-// LanguageDropdown.tsx
 import { useState, useEffect } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
+import { Language } from '@/types/types';
 
-export interface Language {
-  id: string;
+export interface LanguageDrop {
+  id: Language | undefined;
   name: string;
   icon?: string;
 }
 
 export interface LanguageDropdownProps {
   language?: string;
-  onSelect?: (language: Language) => void;
+  onSelect?: (language: LanguageDrop) => void;
 }
 
-const languages: Language[] = [
-  { id: 'placeholder', name: 'Find Language' },
-  { id: 'python', name: 'Python' },
-  { id: 'c', name: 'C' },
-  { id: 'bash', name: 'Bash' },
-  { id: 'java', name: 'Java' },
+const languages: LanguageDrop[] = [
+  { id: undefined, name: 'Find Language' },
+  { id: Language.python, name: 'Python' },
+  { id: Language.c, name: 'C' },
+  { id: Language.bash, name: 'Bash' },
+  { id: Language.java, name: 'Java' },
 ];
 
 const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
@@ -26,7 +26,7 @@ const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
   onSelect,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
+  const [selectedLanguage, setSelectedLanguage] = useState<LanguageDrop>(() => {
     return languages.find(lang => lang.id === language) || languages[0];
   });
 
@@ -38,8 +38,8 @@ const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
     }
   }, [language]);
 
-  const handleSelect = (language: Language) => {
-    if (language.id === 'placeholder') return;
+  const handleSelect = (language: LanguageDrop) => {
+    if (language.id === undefined) return;
     setSelectedLanguage(language);
     setIsOpen(false);
     onSelect?.(language);

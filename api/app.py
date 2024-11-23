@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from llm import request_code
+from llm import request_code, generate_tests
 from flask_cors import CORS
 from compile import compile_and_run
 from functools import wraps
@@ -43,6 +43,21 @@ def imgtocode():
         'language': language,
     }
     return jsonify(response), 201
+
+@app.route('/api/generatetests', methods=['POST'])
+@require_json
+def tests():
+    print("test")
+    code = request.json.get('code')
+    language = request.json.get('language')
+    print(code)
+    print(language)
+    
+    if not code or not language:
+        return jsonify({"error": "Both 'code' and 'language' are required fields."}), 400
+
+    output = generate_tests(code, language)
+    return jsonify(output), 201
 
 
 @app.route('/api/compile', methods=['POST'])

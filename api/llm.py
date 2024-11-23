@@ -36,5 +36,27 @@ def request_code(img_url=None, img_base64=None):
         print("Error: No response received from the model.")
         sys.exit(1)
 
-# def generate_tests(code, language):
-#     instructions = f"Given this following {language} code, add 3 useful test cases "
+def generate_tests(code, language):
+    instructions = f"Given this following {language} code, add 3 useful test cases to the code. These test cases will run from the entry point of the code, and call the function in question. If the provided code is not a function, create a function that will be called by the test cases. Return the entire code block in a markdown code block, denoted using triple backtick, without the language. Do not return anything else."
+
+    messages = [
+        {
+            "role": "user",
+            "content": [
+                {"type": "text", "text": instructions},
+            ]
+        }
+    ]
+
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages,
+        max_tokens=1000,
+    )
+
+    if response.choices:
+        code = response.choices[0].message.content.split("```")[1]
+        return code, language
+    else:
+        print("Error: No response received from the model.")
+        sys.exit(1)
