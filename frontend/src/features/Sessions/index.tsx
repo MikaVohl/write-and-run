@@ -19,25 +19,24 @@ const Sessions = () => {
     console.log(data);
     if (isLoading) {
         return (
-            <Card>
-                <CardContent className="flex items-center justify-center min-h-[400px]">
-                    <div className="text-muted-foreground">Loading sessions...</div>
-                </CardContent>
-            </Card>
+            <></>
         );
     }
-
-    // if (error) {
-    //     return (
-    //         <Card>
-    //             <CardContent className="flex items-center justify-center min-h-[400px]">
-    //                 <div className="text-red-500">Error loading sessions:</div>
-    //             </CardContent>
-    //         </Card>
-    //     );
-    // }
-
     const sessions = data || [];
+    const formatDate = (dateString: string) => {
+        try {
+            // Add 'Z' to indicate UTC/GMT
+            const utcDate = new Date(dateString + 'Z');
+
+            // Convert to local time
+            const localDate = new Date(utcDate.getTime());
+
+            return formatDistanceToNow(localDate, { addSuffix: true });
+        } catch (error) {
+            console.error('Error parsing date:', error);
+            return dateString; // Fallback to original string if parsing fails
+        }
+    };
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -51,7 +50,7 @@ const Sessions = () => {
     };
 
     return (
-        <div className="">
+        <div className="p-4">
             <Card>
                 <CardHeader>
                     <div className="flex items-center justify-between">
@@ -88,7 +87,7 @@ const Sessions = () => {
                                     onClick={() => navigate(`/sessions/${session.id}`)}
                                 >
                                     <TableCell className="font-medium">
-                                        {session.created_at && formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
+                                        {session.created_at && formatDate(session.created_at)}
                                     </TableCell>
                                     <TableCell>{session.language}</TableCell>
                                     <TableCell>

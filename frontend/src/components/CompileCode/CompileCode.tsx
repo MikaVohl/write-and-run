@@ -20,15 +20,12 @@ const CompilerCode: React.FC<CompilerOutputProps> = ({
   };
 
   return (
-    <div className={`space-y-2 ${className}`}>
-      <h2 className=" font-semibold px-2 ">Compiler Output</h2>
-
+    <div className={`${className}`}>
       <MonacoEditor
         value={compilerOutput}
         options={editorOptions}
         className="rounded border border-gray-300"
       />
-
     </div>
   );
 };

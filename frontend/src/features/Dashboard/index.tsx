@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from "@/components/ui/skeleton";
-import CodeEditor from '@/components/CodeEditor/CodeEditor';
 import { useState, useEffect } from 'react';
-import CompilerCode from '@/components/CompileCode/CompileCode';
 import { useParams } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { updateSession, useSession, useSessionImage } from '@/api';
 import { supabase } from '@/supabaseClient';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { LoadingState } from './components/LoadingState';
+import { CompilerOutput } from './components/CompilerOutput';
+import { CodeEditorSection } from './components/CodeEditor';
+import { TabView } from './components/TabView';
+import { cn } from '@/lib/utils';
 
 interface UpdateSessionInput {
   id: string;
@@ -27,6 +27,8 @@ const SessionDashboard = () => {
   const [compilerOutput, setCompilerOutput] = useState<string>("");
   const [isCompiling, setIsCompiling] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>("");
+  const [isCompilerExpanded, setIsCompilerExpanded] = useState(true);
+
   const updateSessionMutation = useMutation({
     mutationFn: (code: string) => {
       const updateData: UpdateSessionInput = {
@@ -91,8 +93,6 @@ const SessionDashboard = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data = await response.json();
-
-        // Updated to pass the code to the mutation
         await updateSessionMutation.mutateAsync(data.code);
         setEditorCode(data.code);
       } catch (error) {
@@ -102,10 +102,6 @@ const SessionDashboard = () => {
 
     processImage();
   }, [imageUrl, sessionId, session?.status, updateSessionMutation]);
-
-  const handleCodeChange = (newCode: string) => {
-    setEditorCode(newCode || "");
-  };
 
   const handleRunClick = async () => {
     setIsCompiling(true);
@@ -136,85 +132,43 @@ const SessionDashboard = () => {
   };
 
   if (isSessionLoading || isImageLoading) {
-    return (
-      <div className="grid grid-cols-2 gap-6">
-        <div className="space-y-6">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <Skeleton className="w-full h-[300px] rounded-lg" />
-            </CardHeader>
-          </Card>
-
-          <Card>
-            <CardContent>
-              <Skeleton className="w-full h-[200px]" />
-            </CardContent>
-          </Card>
-        </div>
-
-        <Card className="h-full">
-          <CardHeader className="flex flex-row items-center justify-between border-b">
-            <Skeleton className="h-4 w-[100px]" />
-            <Skeleton className="h-10 w-[100px]" />
-          </CardHeader>
-          <CardContent className="p-0">
-            <Skeleton className="w-full h-[500px]" />
-          </CardContent>
-        </Card>
-      </div>
-    );
+    return <LoadingState />;
   }
+  const getMainContentHeight = () => {
+    return isCompilerExpanded ? 'h-[calc(100%-300px)]' : 'h-[calc(100%-40px)]';
+  };
 
   return (
-    <div className="grid grid-cols-2 gap-6">
-      <div className="space-y-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            {imageUrl && (
-              <div className="w-full h-full">
-                <img
-                  src={imageUrl}
-                  alt="Code"
-                  className="w-full h-auto object-contain rounded-lg"
-                />
-              </div>
-            )}
-          </CardHeader>
-        </Card>
+    <div className="flex flex-col h-full">
+      {/* Main content area */}
+      <div className={cn(
+        "grid grid-cols-2 divide-x divide-neutral-800 transition-all duration-200",
+        getMainContentHeight()
+      )}>
+        <div className="flex flex-col h-full">
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <TabView imageUrl={imageUrl} problemStatement={"MOCK DATA"} />
+          </div>
+        </div>
 
-        <Card>
-          <CardContent>
-            <CompilerCode compilerOutput={compilerOutput} />
-          </CardContent>
-        </Card>
+        <div className="h-full overflow-hidden">
+          <CodeEditorSection
+            language={session?.language?.toLowerCase() || 'python'}
+            code={editorCode}
+            isCompiling={isCompiling}
+            onCodeChange={setEditorCode}
+            onRun={handleRunClick}
+          />
+        </div>
       </div>
 
-            <Card className="flex flex-col h-full">
-                <CardHeader className="flex flex-row items-center justify-between border-b">
-                    <div className="flex items-center space-x-2">
-                        <span className="text-sm text-gray-500">main.{session?.language?.toLowerCase() || 'c'}</span>
-                    </div>
-                    <div style={{ width: '15%', padding: '20px' }}>
-                        <Button
-                            variant="outline"
-                            onClick={handleRunClick}
-                            disabled={isCompiling}
-                            style={{ fontSize: '16px' }}
-                        >
-                            {isCompiling ? "Compiling..." : "Run"}
-                        </Button>
-                    </div>
-                </CardHeader>
-                <CardContent className="p-0 flex-1">
-                    <CodeEditor
-                        language={session?.language?.toLowerCase() || 'python'}
-                        code={editorCode}
-                        onChange={handleCodeChange}
-                    />
-                </CardContent>
-            </Card>
-        </div>
-    );
+      <CompilerOutput
+        output={compilerOutput}
+        isExpanded={isCompilerExpanded}
+        onToggle={() => setIsCompilerExpanded(!isCompilerExpanded)}
+      />
+    </div>
+  );
 };
 
 export default SessionDashboard;
