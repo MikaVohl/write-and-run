@@ -19,7 +19,7 @@ def request_code(img_url=None, img_base64=None):
     3. Describe the programming concept of the code in 3-8 words.
     4. Summarize the functionality of the code in 1-5 words.
 
-    Return the output in the following JSON format:
+    Return the output in this specific JSON format in plaintext, with no triple backticks, include spaces, tabs, and newlines as needed:
     {
         "language": "<language name>",
         "code": "<code as a single string>",
@@ -31,7 +31,7 @@ def request_code(img_url=None, img_base64=None):
     # Define user input (image description or relevant information)
     user_prompt = """
     Please transcribe the content of this image into code.
-    Return the output in this specific JSON format in plaintext, with no markdown formatting (no triple backticks):
+    Return the output in this specific JSON format in plaintext, with no triple backticks, include spaces, tabs, and newlines as needed:
     {
         "language": "<language name>",
         "code": "<code as a single string>",
