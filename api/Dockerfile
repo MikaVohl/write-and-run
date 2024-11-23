@@ -1,13 +1,35 @@
 FROM python:3.8-slim-buster
 
+# Set working directory
 WORKDIR /app
 
-# TODO: Hide key
-ENV OPENAI_API_KEY="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"
-
+# Copy only requirements first to leverage Docker cache
 COPY requirements.txt requirements.txt
+
+# Install dependencies
 RUN pip install -r requirements.txt
 
+# Create a non-root user and switch to it
+RUN adduser --disabled-password --gecos '' appuser
+
+# Copy the rest of the application
 COPY . .
 
-CMD ["python", "app.py"]
+# Set proper permissions for the application directory
+RUN chown -R appuser:appuser /app
+
+# The API key should be passed at runtime, not build time
+ENV OPENAI_API_KEY="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"
+
+
+# Set Python to run in unbuffered mode
+ENV PYTHONUNBUFFERED=1
+
+# Expose the port the app runs on
+EXPOSE 5001
+
+# Switch to non-root user
+USER appuser
+
+# Command to run the application with error logging
+CMD ["python", "-u", "app.py"]
