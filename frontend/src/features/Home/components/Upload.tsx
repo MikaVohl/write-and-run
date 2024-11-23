@@ -1,62 +1,16 @@
 import { useState, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@radix-ui/react-progress';
-import { Upload, X, CheckCircle2, Settings2 } from 'lucide-react';
+import { Upload } from 'lucide-react';
 import { supabase } from '@/supabaseClient';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-interface FileUploadState {
-    file: File | null;
-    preview: string | null;
-}
-
-interface CompilerSettings {
-    language: string;
-    // optimization: string;
-}
-
-const processWithExternalAPI = async (session: any, signedUrl: string) => {
-    // Send signed URL to external API
-    const response = await fetch('YOUR_EXTERNAL_API_ENDPOINT', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${process.env.EXTERNAL_API_KEY}`, // Your API key
-        },
-        body: JSON.stringify({
-            imageUrl: signedUrl,
-            language: session.language,
-            sessionId: session.id
-        })
-    });
-
-    if (!response.ok) {
-        throw new Error('Processing failed');
-    }
-
-    return await response.json();
-};
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/heic'];
 
-const getBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = error => reject(error);
-    });
-};
-
 const UploadComponent = () => {
-    const [uploadState, setUploadState] = useState<FileUploadState>({
-        file: null,
-        preview: null,
-    });
     const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -90,10 +44,6 @@ const UploadComponent = () => {
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setUploadState({
-                file,
-                preview: reader.result as string,
-            });
             handleSubmit(file);  // Automatically start upload
         };
         reader.readAsDataURL(file);
@@ -211,7 +161,7 @@ const UploadComponent = () => {
                             onDragLeave={handleDragLeave}
                             className={`
                                 relative overflow-hidden
-                                border-2 border-dashed rounded-lg p-12
+                                border-2 border-dashed rounded-lg p-12 py-40
                                 ${isDragging
                                     ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
                                     : 'border-gray-300 dark:border-gray-700'

@@ -171,7 +171,7 @@ const SessionDashboard = () => {
                 </Card>
             </div>
 
-            <Card className="h-full">
+            <Card className="flex flex-col h-full">
                 <CardHeader className="flex flex-row items-center justify-between border-b">
                     <div className="flex items-center space-x-2">
                         <span className="text-sm text-gray-500">main.{session?.language?.toLowerCase() || 'c'}</span>
@@ -187,9 +187,9 @@ const SessionDashboard = () => {
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent className="p-0">
+                <CardContent className="p-0 flex-1">
                     <CodeEditor
-                        language={session?.language?.toLowerCase() || 'c'}
+                        language={session?.language?.toLowerCase() || 'python'}
                         code={editorCode}
                         onChange={handleCodeChange}
                     />
