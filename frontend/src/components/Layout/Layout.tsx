@@ -77,44 +77,49 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {/* User Profile Section */}
                 {user && (
                     <div className="p-3 bg-white border-t border-gray-200">
-                        <div onClick={() => { navigate('./profile') }} className={cn(
-                            "flex items-center gap-3 p-2 rounded-lg",
-                            "cursor-pointer",
-                            "hover:bg-gray-100 transition-all duration-200",
-                            !isSidebarExpanded && "justify-center"
-                        )}>
-                            <div className="relative ">
-                                <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
-                                    {user.user_metadata?.avatar_url ? (
-                                        <img
-                                            src={user.user_metadata.avatar_url}
-                                            alt="Profile"
-                                            className="w-full h-full object-cover"
-                                        />
-                                    ) : (
-                                        <Icons.user className="w-4 h-4 text-gray-500" />
-                                    )}
+                        <div className="flex items-center gap-3">
+                            <div
+                                onClick={() => navigate('./profile')}
+                                className={cn(
+                                    "flex items-center gap-3 p-2 rounded-lg flex-1",
+                                    "cursor-pointer",
+                                    "hover:bg-gray-100 transition-all duration-200",
+                                    !isSidebarExpanded && "justify-center"
+                                )}
+                            >
+                                <div className="relative">
+                                    <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
+                                        {user.user_metadata?.avatar_url ? (
+                                            <img
+                                                src={user.user_metadata.avatar_url}
+                                                alt="Profile"
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <Icons.user className="w-4 h-4 text-gray-500" />
+                                        )}
+                                    </div>
+                                    <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
                                 </div>
-                                <div className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white" />
+                                {isSidebarExpanded && (
+                                    <div className="min-w-0 flex-1">
+                                        <p className="text-sm font-medium text-gray-900 truncate">
+                                            {user.user_metadata?.full_name || user.email}
+                                        </p>
+                                        <p className="text-xs text-gray-500 truncate">
+                                            {user.email}
+                                        </p>
+                                    </div>
+                                )}
                             </div>
-                            {isSidebarExpanded && (
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-sm font-medium text-gray-900 truncate">
-                                        {user.user_metadata?.full_name || user.email}
-                                    </p>
-                                    <p className="text-xs text-gray-500 truncate">
-                                        {user.email}
-                                    </p>
-                                </div>
-                            )}
                             {isSidebarExpanded && (
                                 <Button
                                     variant="ghost"
                                     size="icon"
                                     onClick={signOut}
-                                    className="h-8 w-8 text-gray-500 hover:text-gray-700"
+                                    className="h-10 w-10 p-1 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full"
                                 >
-                                    <Icons.logOut className="h-4 w-4" />
+                                    <Icons.logOut className="h-[1.1rem] w-[1.1rem]" />
                                 </Button>
                             )}
                         </div>
