@@ -12,11 +12,14 @@ import { useImageProcessing } from "./hooks/useImageProcessing";
 import { LanguageDrop } from "./components/LanguageDropdown";
 import { supabase } from '@/supabaseClient';
 import { Loader2 } from "lucide-react";
+import { useTestsGeneration } from "./hooks/useTestGeneration";
+import { useEffect, useState } from "react";
 
 const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const apiUrl = import.meta.env.VITE_API_URL;
   const queryClient = useQueryClient();
+  const [localCode, setLocalCode] = useState<string>('');
 
   // Session and Image Queries
   const {
@@ -38,9 +41,17 @@ const SessionDashboard = () => {
     compile
   } = useCompiler();
 
+  // Test gen
+  const {
+    generateTests,
+    isGeneratingTests,
+    testsError,
+    isTestsError
+  } = useTestsGeneration({ sessionId: sessionId!, apiUrl });
+
 
   // Image Processing
-  const { imageUrl, isProcessing, error: processingError } = useImageProcessing({
+  const { imageUrl, isProcessing } = useImageProcessing({
     session,
     sessionImage,
   });
@@ -63,42 +74,6 @@ const SessionDashboard = () => {
     }
   });
 
-  // Tests Generation Mutation
-  const generateTestsMutation = useMutation({
-    mutationFn: async (code: string) => {
-      if (!session?.language) throw new Error('No language selected');
-
-      const response = await fetch(`${apiUrl}generatetests`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          code,
-          language: session.language.toLowerCase(),
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to generate tests');
-      return response.json();
-    },
-    onSuccess: async (data) => {
-      await updateSessionMutation.mutateAsync({
-        field: 'code',
-        value: data.code
-      });
-    },
-    onError: (error) => {
-      console.error('Failed to generate tests:', error);
-    }
-  });
-
-  // Event Handlers
-  const handleCodeChange = async (code: string) => {
-    await updateSessionMutation.mutateAsync({
-      field: 'code',
-      value: code
-    });
-  };
-
   const handleLanguageChange = async (language: LanguageDrop) => {
     await updateSessionMutation.mutateAsync({
       field: 'language',
@@ -106,17 +81,39 @@ const SessionDashboard = () => {
     });
   };
 
-  const handleRunClick = () => {
+  useEffect(() => {
+    if (session?.code) {
+      setLocalCode(session.code);
+    }
+  }, [session?.code]);
+
+  const handleCodeChange = (newCode: string) => {
+    setLocalCode(newCode);
+  };
+
+  const handleRunClick = async () => {
     if (!session?.language) return;
+
+    // Update the database with the current code
+    await updateSessionMutation.mutateAsync({
+      field: 'code',
+      value: localCode
+    });
+
+    // Run the compilation
     compile({
-      code: session.code!,
+      code: localCode,
       language: session.language
     });
   };
 
+  // const handleMakeTests = () => {
+  //   if (!session?.code) return;
+  //   generateTestsMutation.mutate(session.code);
+  // };
   const handleMakeTests = () => {
     if (!session?.code) return;
-    generateTestsMutation.mutate(session.code);
+    generateTests(session.code);
   };
 
   // Loading States
@@ -124,7 +121,9 @@ const SessionDashboard = () => {
     return <></>;
   }
 
-  const showProcessingOverlay = isProcessing || session?.status === 'pending';
+  const showProcessingOverlay = isProcessing ||
+    session?.status === 'pending' ||
+    isGeneratingTests;
 
 
   return (
@@ -147,7 +146,10 @@ const SessionDashboard = () => {
               <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                  Processing image and detecting code...
+                  {isGeneratingTests
+                    ? "Generating tests..."
+                    : "Processing image and detecting code..."
+                  }
                 </p>
               </div>
               <CodeEditorSection
