@@ -67,24 +67,7 @@ export const Routes: Route[] = [
     icon: Icons.user,
     component: <Profile />,
     showInNav: false,
-  },
-  {
-    name: "Running",
-    path: "/LoadingAnimation",
-    href: "/LoadingAnimation",
-    icon: Icons.user,
-    component: <LoadingAnimation />,
-    showInNav: true,
-  },
-
-  /*{
-    name: "Tester",
-    path: "/tester?",
-    href: "/tester",
-    icon: Icons.literature,
-    component: <Tester concept="Concept Clicked On" task="GPT Generated Task" />,
-    showInNav: true,
-  },*/
+  }
 ];
 
 export const getNavigationItems = () =>
