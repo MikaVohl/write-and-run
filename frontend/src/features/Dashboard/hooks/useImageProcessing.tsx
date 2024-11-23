@@ -12,7 +12,7 @@ interface ProcessResponse {
     language: Language;
     concept?: string;
     summary: string;
-    promt?: string;
+    analysis?: string;
 }
 
 interface ImageProcessingInput {
@@ -52,7 +52,8 @@ export const useImageProcessing = ({
                         summary: data.summary,
                         language: detectedLanguage,
                         concept: data.concept,
-                        status: 'completed'
+                        status: 'completed',
+                        analysis: data.analysis
                     })
                     .eq('id', session!.id);
 

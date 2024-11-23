@@ -20,8 +20,9 @@ interface TabViewProps {
     code?: string;
     language?: Language;
     prompt?: string;
+    analysis?: string;
 }
-export const TabView = ({ imageUrl, problemStatement, code, language, prompt }: TabViewProps) => {
+export const TabView = ({ imageUrl, problemStatement, code, language, prompt, analysis }: TabViewProps) => {
     const [zoom, setZoom] = useState(1);
 
     return (
@@ -118,7 +119,7 @@ export const TabView = ({ imageUrl, problemStatement, code, language, prompt }: 
                 value="analysis"
                 className="flex-1 m-0 overflow-auto"
             >
-                <CodeAnalysis code={code} language={language} />
+                <CodeAnalysis code={code} language={language} analysis={analysis}/>
             </TabsContent>
         </Tabs>
     );

@@ -12,6 +12,7 @@ import {
 interface CodeAnalysisProps {
     code?: string;
     language?: string;
+    analysis?: string;
 }
 
 interface MetricItem {
@@ -53,7 +54,7 @@ const useCodeMetrics = (code: string = '') => {
     }, [code]);
 };
 
-export const CodeAnalysis = ({ code = '', language = '' }: CodeAnalysisProps) => {
+export const CodeAnalysis = ({ code = '', language = '' , analysis = ""}: CodeAnalysisProps) => {
     const stats = useCodeMetrics(code);
 
     const metrics: MetricItem[] = [
@@ -66,7 +67,9 @@ export const CodeAnalysis = ({ code = '', language = '' }: CodeAnalysisProps) =>
     ];
 
     return (
+        
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 p-6">
+            {analysis}
             {metrics.map((metric, index) => (
                 <Card key={index} className="bg-white dark:bg-neutral-900">
                     <CardContent className="pt-6">
@@ -80,6 +83,7 @@ export const CodeAnalysis = ({ code = '', language = '' }: CodeAnalysisProps) =>
                     </CardContent>
                 </Card>
             ))}
+
         </div>
     );
 };
