@@ -8,6 +8,7 @@ import subprocess
 import sys
 import requests
 from contextlib import contextmanager
+import re
 
 
 ALLOWED_LANGUAGES = {
@@ -148,9 +149,14 @@ def compile_and_run(code, language):
         
         file_extension = lang_config['file_extension']
         timeout = lang_config['timeout']
-        
-        # Create the source code file
-        file_path = os.path.join(run_dir, f'source{file_extension}')
+
+        if language == "java": 
+            match = re.search(r'\bclass\s+(\w+)\s*{', code)
+            class_name = match.group(1)
+            file_path = os.path.join(run_dir, f'{class_name}{file_extension}')
+
+        else:
+            file_path = os.path.join(run_dir, f'source{file_extension}')
         with open(file_path, 'w') as f:
             f.write(code)
         
