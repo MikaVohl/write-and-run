@@ -67,14 +67,14 @@ export const Routes: Route[] = [
     component: <Profile />,
     showInNav: false,
   },
-  {
+  /*{
     name: "Tester",
     path: "/tester?",
     href: "/tester",
     icon: Icons.literature,
     component: <Tester concept="Concept Clicked On" task="GPT Generated Task" />,
     showInNav: true,
-  },
+  },*/
 ];
 
 export const getNavigationItems = () =>
