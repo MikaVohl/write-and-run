@@ -59,14 +59,20 @@ export const TabView = ({ imageUrl, code, language, prompt, className }: TabView
                         Code Analysis
                     </TabsTrigger>
                 </TabsList>
-                <ZoomControls zoom={zoom} setZoom={setZoom} />
+                {/* <ZoomControls zoom={zoom} setZoom={setZoom} /> */}
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-h-0 overflow-hidden">
+            <div className="flex-1 relative overflow-hidden">
                 <TabsContent
                     value="document"
-                    className="h-full m-0 flex flex-col overflow-hidden"
+                    className={cn(
+                        "absolute inset-0",
+                        "flex flex-col",
+                        "m-0 p-0",
+                        "data-[state=inactive]:pointer-events-none",
+                        "data-[state=inactive]:hidden"
+                    )}
                 >
                     {prompt && (
                         <div className="flex-none bg-white border-b border-gray-200">
@@ -79,8 +85,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className }: TabView
                             </div>
                         </div>
                     )}
-
-                    <div className="flex-1 min-h-0 overflow-auto bg-gray-50">
+                    <div className="flex-1 overflow-auto bg-gray-50">
                         <ImageViewer
                             imageUrl={imageUrl}
                             zoom={zoom}
@@ -91,7 +96,13 @@ export const TabView = ({ imageUrl, code, language, prompt, className }: TabView
 
                 <TabsContent
                     value="analysis"
-                    className="h-full m-0 overflow-auto"
+                    className={cn(
+                        "absolute inset-0",
+                        "m-0 p-0",
+                        "overflow-auto",
+                        "data-[state=inactive]:pointer-events-none",
+                        "data-[state=inactive]:hidden"
+                    )}
                 >
                     <CodeAnalysis code={code} language={language} />
                 </TabsContent>
