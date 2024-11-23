@@ -94,6 +94,7 @@ export type Database = {
       }
       sessions: {
         Row: {
+          analysis: string | null
           code: string | null
           compilation_output: string | null
           concept: string | null
@@ -107,6 +108,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          analysis?: string | null
           code?: string | null
           compilation_output?: string | null
           concept?: string | null
@@ -120,6 +122,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          analysis?: string | null
           code?: string | null
           compilation_output?: string | null
           concept?: string | null
