@@ -140,7 +140,7 @@ const SessionDashboard = () => {
           <div className="flex-1 min-h-0 overflow-hidden">
             <TabView
               imageUrl={imageUrl}
-              problemStatement={"MOCK DATA"}
+              problemStatement={session!.prompt as any}
               code={localCode}
               language={session?.language as Language}
             />
