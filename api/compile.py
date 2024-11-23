@@ -3,6 +3,10 @@ import os
 import shutil
 import secrets
 import tempfile
+import importlib
+import subprocess
+import sys
+import requests
 
 
 ALLOWED_LANGUAGES = {
@@ -53,6 +57,20 @@ def compile_and_run(code, language):
                 timeout=timeout,
                 cwd=run_dir
             )
+
+        if "ModuleNotFoundError" in process.stderr:
+            if not check_and_install(process.stderr.split("'")[1]):
+                return {
+                    "success": False,
+                    "error": "ModuleNotFoundError: Something wrong when installing the module"
+                }, 200
+            process = subprocess.run(
+                lang_config['command'] + [file_path],
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                cwd=run_dir
+            )
         
         output = process.stdout
         error_output = process.stderr
@@ -77,3 +95,42 @@ def compile_and_run(code, language):
         }, 200
     finally:
         shutil.rmtree(run_dir, ignore_errors=True)
+
+
+
+def check_and_install(package_name):
+    """
+    Check if a package is installed. If not, check its size on PyPI and install it if under 5MB.
+    """
+    try:
+        # Check if the package is already installed
+        importlib.import_module(package_name)
+        print(f"'{package_name}' is already installed.")
+        return False
+    except ImportError:
+        print(f"'{package_name}' is not installed. Checking size...")
+
+
+    # Check package size from PyPI
+    try:
+        response = requests.get(f"https://pypi.org/pypi/{package_name}/json", timeout=10)
+        response.raise_for_status()
+        data = response.json()
+        # Get size of the latest release's wheel file
+        urls = data["releases"][data["info"]["version"]]
+        total_size = sum(file["size"] for file in urls if file["packagetype"] == "bdist_wheel")
+
+        size_in_mb = total_size / (1024 * 1024)
+        if size_in_mb > 1000:
+            print(f"'{package_name}' is too large ({size_in_mb:.2f} MB). Not installing.")
+            return
+        print(f"'{package_name}' is {size_in_mb:.2f} MB. Proceeding with installation...")
+
+        # Install the package
+        subprocess.check_call([sys.executable, "-m", "pip", "install", package_name])
+        print(f"'{package_name}' installed successfully.")
+        return True
+    except Exception as e:
+        print(f"Error checking or installing '{package_name}': {e}")
+        return False
+
