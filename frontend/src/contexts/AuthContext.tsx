@@ -20,7 +20,6 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
     useEffect(() => {
         setIsLoading(true);
         supabase.auth.getSession().then(({ data: { session } }) => {
-            console.log(session);
             setSession(session);
             setUser(session?.user ?? null);
             setIsLoading(false);
