@@ -39,7 +39,6 @@ int main() {
                     <Card>
                         <CardContent>
                             <CompilerCode compilerOutput={output} />
-
                         </CardContent>
                     </Card>
                 </div>
