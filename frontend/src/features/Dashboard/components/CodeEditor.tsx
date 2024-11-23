@@ -1,17 +1,17 @@
 import { Button } from '@/components/ui/button';
 import CodeEditor from '@/components/CodeEditor/CodeEditor';
 import LanguageDropdown from './LanguageDropdown';
-import { Language } from './LanguageDropdown';
+import { LanguageDrop } from './LanguageDropdown';
 
 
 interface CodeEditorSectionProps {
     language: string;
     code: string;
     isCompiling: boolean;
-    handleLanguageSelect: (language: Language) => void;
+    handleLanguageSelect: (language: LanguageDrop) => void;
     onCodeChange: (code: string) => void;
-    onLanguageChange: (language: Language) => void;
     onRun: () => void;
+    makeTests: () => void;
 }
 
 
@@ -21,8 +21,8 @@ export const CodeEditorSection = ({
     handleLanguageSelect,
     isCompiling,
     onCodeChange,
-    onLanguageChange,
-    onRun
+    onRun,
+    makeTests
 }: CodeEditorSectionProps) => {
 
     
@@ -40,10 +40,11 @@ export const CodeEditorSection = ({
                         Run
                     </Button>
                     <Button
+                        onClick={makeTests}
                         variant="outline"
                         size="sm"
                     >
-                        More Tests
+                        Generate Tests
                     </Button>
                 </div>
             </div>
