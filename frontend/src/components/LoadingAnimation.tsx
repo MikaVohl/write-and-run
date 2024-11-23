@@ -1,23 +1,19 @@
-import { Player } from '@lottiefiles/react-lottie-player';
+import { Player as Lottie } from '@lottiefiles/react-lottie-player';
+import runningAnimation from '@/assets/Animations/runningman.json';
 
 const LoadingAnimation = () => {
   return (
-    <>
-    <div className='container'>
-      <h1>Using Lottie with React JS ⚛️</h1>
-
-      <Player
-        src="/assets/Animations/runningman.json"
-        className="player"
-        loop
-        autoplay
-      />
+    <div className="relative h-20 w-full overflow-hidden">
+      <div className="absolute top-0 left-0 animate-bounce-horizontal">
+        <div className="h-20 w-20">
+          <Lottie
+            loop={true}
+            src={runningAnimation}
+            autoplay={true}
+          />
+        </div>
+      </div>
     </div>
-    </>
   );
-};
-
+}; 
 export default LoadingAnimation;
-
-
-
