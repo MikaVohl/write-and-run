@@ -3,7 +3,8 @@ from llm import request_code
 import subprocess
 import tempfile
 import os
-
+import secrets
+import shutil
 app = Flask(__name__)
 
 @app.route('/')
@@ -25,7 +26,7 @@ def imgtocode():
 ALLOWED_LANGUAGES = {
     'python': {
         'file_extension': '.py',
-        'command': ['python'],
+        'command': ['python3'],
         'timeout': 5  # seconds
     },
     'java': {
@@ -55,7 +56,7 @@ MAX_CODE_LENGTH = 50000  # characters
 TEMP_DIR = tempfile.mkdtemp(prefix='secure_compiler_')
 
 def require_json(f):
-    @wraps(f)
+
     def decorated_function(*args, **kwargs):
         if not request.is_json:
             return jsonify({"error": "Content-Type must be application/json"}), 415
@@ -100,6 +101,16 @@ def compile_and_run():
         
         # Handle commands based on the language
         output = ""
+
+        if language == 'python':
+            process = subprocess.run(
+                ['python3'] + lang_config['command'] + [file_path],  # Use python3 instead of python
+                capture_output=True,
+                text=True,
+                timeout=timeout,
+                cwd=run_dir
+            )
+
         
         if language == 'c':
             # Compile C code
@@ -182,12 +193,6 @@ def not_found(e):
 def method_not_allowed(e):
     return jsonify({"error": "Method not allowed"}), 405
 
-if __name__ == '__main__':
-    # Ensure temp directory exists
-    os.makedirs(TEMP_DIR, exist_ok=True)
-    
-    # Run with security measures
-    app.run(host='127.0.0.1', port=5000)
 
 
 if __name__ == '__main__':
