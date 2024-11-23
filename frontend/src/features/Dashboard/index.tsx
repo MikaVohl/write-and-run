@@ -120,7 +120,7 @@ const SessionDashboard = () => {
 
   // Loading States
   if (isSessionLoading || isImageLoading) {
-    return <LoadingState />;
+    return <></>;
   }
 
   const showProcessingOverlay = isProcessing || session?.status === 'pending';
