@@ -4,9 +4,7 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CodeEditorSection } from "./components/CodeEditor";
 import { CompilerOutput } from "./components/CompilerOutput";
-import { LoadingState } from "./components/LoadingState";
 import { TabView } from "./components/TabView";
-// import { Language } from "@/types/types";
 import { useCompiler } from "./hooks/useCompiler";
 import { useImageProcessing } from "./hooks/useImageProcessing";
 import { LanguageDrop } from "./components/LanguageDropdown";
@@ -41,14 +39,25 @@ const SessionDashboard = () => {
     compile
   } = useCompiler();
 
+  const updateCode = async (newCode: string) => {
+    setLocalCode(newCode);
+    await updateSessionMutation.mutateAsync({
+      field: 'code',
+      value: newCode
+    });
+  };
+
   // Test gen
   const {
     generateTests,
     isGeneratingTests,
-    testsError,
-    isTestsError
-  } = useTestsGeneration({ sessionId: sessionId!, apiUrl });
-
+  } = useTestsGeneration({
+    sessionId: sessionId!,
+    apiUrl,
+    onSuccess: async (newCode: string) => {
+      await updateCode(newCode);
+    }
+  });
 
   // Image Processing
   const { imageUrl, isProcessing } = useImageProcessing({
@@ -67,6 +76,7 @@ const SessionDashboard = () => {
       if (error) throw error;
     },
     onSuccess: () => {
+      console.log('invalidating the query')
       queryClient.invalidateQueries({ queryKey: ['sessions', sessionId] });
     },
     onError: (error) => {
@@ -94,11 +104,8 @@ const SessionDashboard = () => {
   const handleRunClick = async () => {
     if (!session?.language) return;
 
-    // Update the database with the current code
-    await updateSessionMutation.mutateAsync({
-      field: 'code',
-      value: localCode
-    });
+    // Update both local and DB
+    await updateCode(localCode);
 
     // Run the compilation
     compile({
@@ -108,8 +115,8 @@ const SessionDashboard = () => {
   };
 
   const handleMakeTests = () => {
-    if (!session?.code) return;
-    generateTests(session.code);
+    if (!localCode || !session?.language) return;
+    generateTests(localCode, session.language);
   };
 
   // Loading States
