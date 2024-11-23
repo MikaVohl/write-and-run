@@ -4,7 +4,7 @@ from openai import OpenAI
 client = OpenAI()
 
 def request_code(img_url=None, img_base64=None):
-    instructions = "Please transcribe the content of this image into code. Return only the name of the coding language used (either c, bash, java, or python), bolded in markdown, and one markdown code box with the extracted code. The markdown code box should be language ambiguious, denoted using only triple backticks. Fix any errors that are likely to be ambigious to a grader."
+    instructions = "Please transcribe the content of this image into code. Return only the name of the coding language used (either c, bash, java, or python), bolded in markdown, one markdown code box with the extracted code, and a short (3-8 word) sentence describing the programming concept of the program (ex. 'Socket Programming in C'). The markdown code box should be language ambiguious, denoted using only triple backticks. Fix any errors that are likely to be ambigious to a grader."
     if img_url:
         img_request = {"type": "image_url", "image_url": {"url": img_url}}
     elif img_base64:
@@ -31,7 +31,8 @@ def request_code(img_url=None, img_base64=None):
             f.write(str(response.choices[0].message.content))
         code = response.choices[0].message.content.split("```")[1]
         language = response.choices[0].message.content.split("**")[1]
-        return code, language
+        concept = response.choices[0].message.content.split("**")[2]
+        return code, language, concept
     else:
         print("Error: No response received from the model.")
         sys.exit(1)
