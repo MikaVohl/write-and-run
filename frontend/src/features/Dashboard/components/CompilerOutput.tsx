@@ -12,10 +12,10 @@ interface CompilerOutputProps {
 export const CompilerOutput = ({ output, isExpanded, onToggle }: CompilerOutputProps) => {
     return (
         <div className={cn(
-            "border-t border-neutral-800 bg-neutral-100 transition-all duration-200",
-            isExpanded ? "h-[300px]" : "h-[40px]"
+            "border-t border-neutral-400 bg-neutral-100 transition-all duration-200",
+            isExpanded ? "h-1/4" : "h-[40px]"
         )}>
-            <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-800">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-400">
                 <div className="flex items-center gap-2">
                     <Button
                         variant="ghost"
@@ -28,7 +28,7 @@ export const CompilerOutput = ({ output, isExpanded, onToggle }: CompilerOutputP
                             <ChevronUp className="h-4 w-4" />
                         }
                     </Button>
-                    <span className="text-sm text-neutral-400 font-mono">Compiler output</span>
+                    <span className="text-sm text-gray-600 font-medium">Compiler output</span>
                 </div>
             </div>
             {isExpanded && (
