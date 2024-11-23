@@ -132,62 +132,58 @@ const SessionDashboard = () => {
 
 
   return (
-    <div className="flex flex-col h-full">
-      <div className={cn(
-        "grid grid-cols-2 divide-x divide-gray-200 transition-all duration-200",
-        isCompilerExpanded ? 'h-[calc(100%-300px)]' : 'h-[calc(100%-40px)]'
-      )}>
-        <div className="flex flex-col h-full">
-          <div className="flex-1 min-h-0 overflow-hidden">
-            <TabView
-              imageUrl={imageUrl}
-              problemStatement={session!.prompt as any}
-              code={localCode}
-              language={session?.language as Language}
-              prompt={session?.prompt as string}
-            />
-          </div>
-        </div>
+    <div className="flex flex-col h-screen overflow-hidden">
+      {/* Main split view */}
+      <div className="flex-1 min-h-0 grid grid-cols-2 divide-x divide-gray-200">
+        {/* Left Panel - Document Viewer */}
         <div className="h-full overflow-hidden">
-          {showProcessingOverlay ? (
-            <div className="relative h-full">
+          <TabView
+            className="h-full"
+            imageUrl={imageUrl}
+            code={localCode}
+            language={session?.language as Language}
+            prompt={session?.prompt!}
+          />
+        </div>
+
+        {/* Right Panel - Code Editor */}
+        <div className="h-full overflow-hidden flex flex-col">
+          <div className="relative flex-1 min-h-0">
+            {showProcessingOverlay && (
               <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
+                <LoadingAnimation />
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                  <LoadingAnimation />
                   {isGeneratingTests
                     ? "Generating tests..."
                     : "Processing image and detecting code..."
                   }
                 </p>
               </div>
-              <CodeEditorSection
-                handleLanguageSelect={handleLanguageChange}
-                language={session?.language!}
-                code={localCode}
-                isCompiling={isCompiling}
-                onCodeChange={handleCodeChange}
-                onRun={handleRunClick}
-                makeTests={handleMakeTests}
-              />
-            </div>
-          ) : (
+            )}
             <CodeEditorSection
               handleLanguageSelect={handleLanguageChange}
-              language={session?.language!}
+              language={session?.language || ''}
               code={localCode}
               isCompiling={isCompiling}
               onCodeChange={handleCodeChange}
               onRun={handleRunClick}
               makeTests={handleMakeTests}
             />
-          )}
+          </div>
         </div>
       </div>
-      <CompilerOutput
-        output={compilerOutput}
-        isExpanded={isCompilerExpanded}
-        onToggle={() => setIsCompilerExpanded(!isCompilerExpanded)}
-      />
+
+      {/* Compiler Output - Fixed to bottom */}
+      <div className={cn(
+        "w-full border-t border-gray-200",
+        isCompilerExpanded ? 'h-80' : 'h-10'
+      )}>
+        <CompilerOutput
+          output={compilerOutput}
+          isExpanded={isCompilerExpanded}
+          onToggle={() => setIsCompilerExpanded(!isCompilerExpanded)}
+        />
+      </div>
     </div>
   );
 };

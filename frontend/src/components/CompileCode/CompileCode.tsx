@@ -9,7 +9,7 @@ interface CompilerOutputProps {
 
 const CompilerCode: React.FC<CompilerOutputProps> = ({
   compilerOutput,
-  className = "h-64",
+  className = "h-[18rem]",
 }) => {
   const editorOptions = {
     readOnly: true,

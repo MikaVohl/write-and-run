@@ -1,7 +1,8 @@
-import { ChevronDown, ChevronUp, X } from 'lucide-react';
-import CompilerCode from '@/components/CompileCode/CompileCode';
+import React from 'react';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import CompilerCode from '@/components/CompileCode/CompileCode';
 
 interface CompilerOutputProps {
     output: string;
@@ -12,10 +13,10 @@ interface CompilerOutputProps {
 export const CompilerOutput = ({ output, isExpanded, onToggle }: CompilerOutputProps) => {
     return (
         <div className={cn(
-            "border-t border-neutral-400 bg-neutral-100 transition-all duration-200",
-            isExpanded ? "h-1/4" : "h-[40px]"
+            "flex flex-col h-full bg-neutral-100",
+            "transition-all duration-200"
         )}>
-            <div className="flex items-center justify-between px-4 py-2 border-b border-neutral-400">
+            <div className="flex-none flex items-center justify-between px-4 py-2 border-b border-neutral-200">
                 <div className="flex items-center gap-2">
                     <Button
                         variant="ghost"
@@ -28,11 +29,14 @@ export const CompilerOutput = ({ output, isExpanded, onToggle }: CompilerOutputP
                             <ChevronUp className="h-4 w-4" />
                         }
                     </Button>
-                    <span className="text-sm text-gray-600 font-medium">Compiler output</span>
+                    <span className="text-sm font-medium text-neutral-600">
+                        Compiler output
+                    </span>
                 </div>
             </div>
+
             {isExpanded && (
-                <div className="h-[calc(100%-40px)]">
+                <div className="flex-1 min-h-0 overflow-auto">
                     <CompilerCode compilerOutput={output} />
                 </div>
             )}
