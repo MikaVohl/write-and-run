@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import {
     Table,
@@ -9,6 +10,13 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { Button } from '@/components/ui/button';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import { formatDistanceToNow } from 'date-fns';
 import { ExternalLink, FileCode } from 'lucide-react';
 import { useSessions } from '@/api';
@@ -16,24 +24,40 @@ import { useSessions } from '@/api';
 const Sessions = () => {
     const navigate = useNavigate();
     const { data, isLoading } = useSessions();
+    const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
+
     if (isLoading) {
         return (
             <></>
         );
     }
+
     const sessions = data || [];
+    const languages = ['Java', 'Python', 'Bash', 'C'];
+
+    const filteredSessions = selectedLanguage === 'all'
+        ? sessions
+        : sessions.filter(session => session.language?.toLowerCase() === selectedLanguage.toLowerCase());
+
+    
+    const capFirst = (string: string) => {
+        if (!string) return string;
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    };
+
     const formatDate = (dateString: string) => {
         try {
-            // Add 'Z' to indicate UTC/GMT
             const utcDate = new Date(dateString + 'Z');
-
-            // Convert to local time
             const localDate = new Date(utcDate.getTime());
-
-            return formatDistanceToNow(localDate, { addSuffix: true });
+    
+            // Format the date and shorten it
+            const distance = formatDistanceToNow(localDate, { addSuffix: true });
+    
+            // Shorten the distance string for minutes and seconds
+            return distance.replace(/minute(s)?/, 'mins').replace(/second(s)?/, 'sec').replace(/hour(s)?/, 'hr').replace(/day(s)?/, 'd');
         } catch (error) {
             console.error('Error parsing date:', error);
-            return dateString; // Fallback to original string if parsing fails
+            return dateString;
         }
     };
 
@@ -73,13 +97,30 @@ const Sessions = () => {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Date</TableHead>
-                                <TableHead>Language</TableHead>
+                                <TableHead>
+                                    <Select
+                                        value={selectedLanguage}
+                                        onValueChange={setSelectedLanguage}
+                                    >
+                                        <SelectTrigger className="p-0 h-auto text-sm font-medium text-muted-foreground border-0 hover:no-underline focus:ring-0 focus:ring-offset-0">
+                                            {capFirst(selectedLanguage)} 
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="all">Languages</SelectItem>
+                                            {languages.map((lang) => (
+                                                <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
+                                                    {capFirst(lang)}
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </TableHead>
                                 <TableHead>Status</TableHead>
-                                <TableHead className="text-right">Actions</TableHead>
+                                <TableHead>Summary</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {sessions.map((session) => (
+                            {filteredSessions.map((session) => (
                                 <TableRow
                                     key={session.id}
                                     className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
@@ -88,32 +129,26 @@ const Sessions = () => {
                                     <TableCell className="font-medium">
                                         {session.created_at && formatDate(session.created_at)}
                                     </TableCell>
-                                    <TableCell>{session.language}</TableCell>
+                                    <TableCell>{session.language != null && capFirst(session.language) }</TableCell>
                                     <TableCell>
                                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
                                             {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
                                         </span>
                                     </TableCell>
-                                    <TableCell className="text-right">
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="gap-2"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                navigate(`/sessions/${session.id}`);
-                                            }}
-                                        >
-                                            <span>View Details</span>
-                                            <ExternalLink className="w-4 h-4" />
-                                        </Button>
+                                    <TableCell>
+                                        <span className={`inline-flex items-center px-2 py-1`}>
+                                            {session.summary}
+                                        </span>
                                     </TableCell>
+        
                                 </TableRow>
                             ))}
-                            {sessions.length === 0 && (
+                            {filteredSessions.length === 0 && (
                                 <TableRow>
                                     <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                                        No sessions found. Create a new session to get started.
+                                        {selectedLanguage === 'all' 
+                                            ? "No sessions found. Create a new session to get started."
+                                            : `No ${selectedLanguage} sessions found.`}
                                     </TableCell>
                                 </TableRow>
                             )}
