@@ -48,6 +48,7 @@ export type Database = {
       session_image: {
         Row: {
           created_at: string | null
+          ext: string
           id: string
           name: string
           session_id: string
@@ -59,6 +60,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string | null
+          ext: string
           id?: string
           name: string
           session_id: string
@@ -70,6 +72,7 @@ export type Database = {
         }
         Update: {
           created_at?: string | null
+          ext?: string
           id?: string
           name?: string
           session_id?: string
@@ -79,7 +82,15 @@ export type Database = {
           uploaded_at?: string | null
           uploaded_by?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "session_documents_session_fk"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       sessions: {
         Row: {
