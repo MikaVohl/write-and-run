@@ -14,11 +14,24 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
     setEditorCode(code);
   }, [code]);
 
+
   const editorOptions = {
     selectOnLineNumbers: true,
     automaticLayout: true,
     theme: 'light',
-  };
+    scrollBeyondLastLine: false, // Prevents extra space after the last line
+    scrollbar: {
+      vertical: 'auto',          // Show vertical scrollbar only when necessary
+      horizontal: 'auto',        // Show horizontal scrollbar only when necessary
+      useShadows: false,         // Disable shadows around the scrollbar
+      verticalScrollbarSize: 8,  // Adjust the size as needed
+      horizontalScrollbarSize: 8,
+    },
+    minimap: {
+      enabled: false,            // Disable the minimap if not needed
+    },
+    wordWrap: 'on',              // Wrap long lines to prevent horizontal scrolling
+  } as const;
 
   // Update the editor code when Monaco Editor content changes
   const handleEditorChange = (newValue: string | undefined) => {
@@ -29,13 +42,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
+    <div style={{ display: 'flex', height: '100%' }}>
       <div style={{ width: '100%', height: '100%' }}>
         <MonacoEditor
           language={language}
           value={editorCode}
           options={editorOptions}
           onChange={handleEditorChange} // Updated to use the correct handler
+          
         />
       </div>
     </div>

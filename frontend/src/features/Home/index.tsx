@@ -1,17 +1,15 @@
-import { Card } from "@/components/ui/card";
 import UploadComponent from "./components/Upload";
 
 const Home = () => {
   return (
-    <div>
-      <div className="w-full h-full flex flex-col">
-        <div className="flex flex-row justify-center">
-          <div className="w-1/2">
-            <UploadComponent />
-          </div>
+    <div className="w-full h-full flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center w-full">
+        <div>
+            <h1 className="text-5xl font-bold text-center font-mono text-gray-700">Write and Run</h1>
+            <p className="text-lg text-center text-gray-500 pt-4">Upload your handwritten code and run it in your browser with ease</p>
         </div>
-        <div className="flex flex-row px-8 space-y-10 justify-center">
-          <Card className="w-full h-[600px]"></Card>
+        <div className="w-2/3 pt-4">
+          <UploadComponent />
         </div>
       </div>
     </div>
