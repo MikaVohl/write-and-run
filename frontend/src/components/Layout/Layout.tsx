@@ -36,7 +36,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 )}
             >
                 {/* Sidebar Header */}
-                <div className="flex items-center h-14 px-3 gap-2 bg-white border-b border-gray-200">
+                <div className="flex items-center h-[50px] px-3 gap-2 bg-white border-b border-gray-200">
                     {isSidebarExpanded && (
                         <div className="flex items-center flex-1 min-w-0">
                             <Link to="/" className="flex items-center gap-2 text-gray-900">
