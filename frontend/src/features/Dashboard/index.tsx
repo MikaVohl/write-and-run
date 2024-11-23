@@ -1,6 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Maximize2, RotateCcw, Share2 } from 'lucide-react';
+import CodeEditor from '@/components/CodeEditor/CodeEditor';
+import {useState} from 'react';
 
 interface SessionDashboardProps {
     imageUrl?: string;
@@ -9,6 +11,7 @@ interface SessionDashboardProps {
 }
 
 const SessionDashboard = ({
+
     imageUrl = '',
     detectedCode = `// Online C compiler to run C program online
 #include <stdio.h>
@@ -19,6 +22,7 @@ int main() {
 }`,
     output = "Hello World\n\n=== Code Execution Successful ==="
 }) => {
+    const [editorCode, setEditorCode] = useState<string>("")
     return (
         <div className="">
             <div className="grid grid-cols-2 gap-6">
@@ -67,20 +71,20 @@ int main() {
                         <div className="flex items-center space-x-2">
                             <span className="text-sm text-gray-500">main.c</span>
                         </div>
-                        <div className="flex items-center space-x-2">
-                            <Button variant="outline" size="icon">
-                                <Maximize2 className="h-4 w-4" />
-                            </Button>
-                            <Button variant="outline" size="icon">
-                                <Share2 className="h-4 w-4" />
-                            </Button>
-                        </div>
+                        <div style={{ width: '5%', padding: '20px' }}>
+                            <button  style={{ fontSize: '16px' }}>
+                            Run
+                            </button>
+      </div>
                     </CardHeader>
                     <CardContent className="p-0">
                         {/* TODO - Karan Edit Component HERE */}
-                        <pre className="p-4 font-mono text-sm">
-                            <code className="language-c">{detectedCode}</code>
-                        </pre>
+                        <CodeEditor
+                            language="c"
+                            code={editorCode}
+
+
+                        />
                     </CardContent>
                 </Card>
             </div>
