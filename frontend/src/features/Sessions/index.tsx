@@ -11,38 +11,42 @@ import {
 import { Button } from '@/components/ui/button';
 import { formatDistanceToNow } from 'date-fns';
 import { ExternalLink, FileCode } from 'lucide-react';
-
-interface Session {
-    id: string;
-    createdAt: string;
-    language: string;
-    status: 'completed' | 'failed' | 'processing';
-    imageUrl: string;
-}
+import { useSessions } from '@/api';
 
 const Sessions = () => {
     const navigate = useNavigate();
+    const { data, isLoading } = useSessions();
+    console.log(data);
+    if (isLoading) {
+        return (
+            <Card>
+                <CardContent className="flex items-center justify-center min-h-[400px]">
+                    <div className="text-muted-foreground">Loading sessions...</div>
+                </CardContent>
+            </Card>
+        );
+    }
 
-    // TODO: Replace with actual data fetching
-    const sessions: Session[] = [
-        {
-            id: '1',
-            createdAt: '2024-03-20T10:00:00Z',
-            language: 'Python',
-            status: 'completed',
-            imageUrl: '/path/to/image'
-        },
-        // Add more mock data as needed
-    ];
+    // if (error) {
+    //     return (
+    //         <Card>
+    //             <CardContent className="flex items-center justify-center min-h-[400px]">
+    //                 <div className="text-red-500">Error loading sessions:</div>
+    //             </CardContent>
+    //         </Card>
+    //     );
+    // }
 
-    const getStatusColor = (status: Session['status']) => {
+    const sessions = data || [];
+
+    const getStatusColor = (status: string) => {
         switch (status) {
             case 'completed':
                 return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
-            case 'failed':
-                return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
-            case 'processing':
+            case 'pending':
                 return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20';
+            default:
+                return 'text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-900/20';
         }
     };
 
@@ -84,7 +88,7 @@ const Sessions = () => {
                                     onClick={() => navigate(`/sessions/${session.id}`)}
                                 >
                                     <TableCell className="font-medium">
-                                        {formatDistanceToNow(new Date(session.createdAt), { addSuffix: true })}
+                                        {session.created_at && formatDistanceToNow(new Date(session.created_at), { addSuffix: true })}
                                     </TableCell>
                                     <TableCell>{session.language}</TableCell>
                                     <TableCell>
@@ -108,6 +112,13 @@ const Sessions = () => {
                                     </TableCell>
                                 </TableRow>
                             ))}
+                            {sessions.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                                        No sessions found. Create a new session to get started.
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </CardContent>

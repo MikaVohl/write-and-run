@@ -5,7 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Progress } from '@radix-ui/react-progress';
 import { Upload, X, CheckCircle2, Settings2 } from 'lucide-react';
-
+import { supabase } from '@/supabaseClient';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 interface FileUploadState {
     file: File | null;
@@ -14,26 +15,52 @@ interface FileUploadState {
 
 interface CompilerSettings {
     language: string;
-    optimization: string;
+    // optimization: string;
 }
+
+const processWithExternalAPI = async (session: any, signedUrl: string) => {
+    // Send signed URL to external API
+    const response = await fetch('YOUR_EXTERNAL_API_ENDPOINT', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${process.env.EXTERNAL_API_KEY}`, // Your API key
+        },
+        body: JSON.stringify({
+            imageUrl: signedUrl,
+            language: session.language,
+            sessionId: session.id
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error('Processing failed');
+    }
+
+    return await response.json();
+};
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/heic'];
 
+const getBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = error => reject(error);
+    });
+};
 
 const UploadComponent = () => {
     const [uploadState, setUploadState] = useState<FileUploadState>({
         file: null,
         preview: null,
     });
+    const navigate = useNavigate();
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const [showSettings, setShowSettings] = useState(false);
-    const [settings, setSettings] = useState<CompilerSettings>({
-        language: 'python',
-        optimization: 'speed',
-    });
     const { toast } = useToast();
 
     const validateFile = (file: File): boolean => {
@@ -61,32 +88,89 @@ const UploadComponent = () => {
     const handleFile = async (file: File) => {
         if (!validateFile(file)) return;
 
-        setIsLoading(true);
-        setUploadProgress(0);
-
         const reader = new FileReader();
-        reader.onloadend = async () => {
+        reader.onloadend = () => {
             setUploadState({
                 file,
                 preview: reader.result as string,
             });
-
-            // Simulate upload progress
-            for (let i = 0; i <= 100; i += 10) {
-                setUploadProgress(i);
-                await new Promise(resolve => setTimeout(resolve, 200));
-            }
-
-            setIsLoading(false);
-            setShowSettings(true);
+            handleSubmit(file);  // Automatically start upload
         };
         reader.readAsDataURL(file);
+    };
+
+    const handleSubmit = async (file: File) => {
+        setIsLoading(true);
+        setUploadProgress(0);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) throw new Error('User not authenticated');
+        const sessionId = crypto.randomUUID();
+        const documentId = crypto.randomUUID();
+
+        // Create file path with user folder structure
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${documentId}.${fileExt}`; // Just the document ID as filename
+        const filePath = `${user.id}/${fileName}`; // Put in user's folder
+        try {
+            // Upload to storage
+            setUploadProgress(30);
+            const { error: uploadError } = await supabase.storage
+                .from('code-images')
+                .upload(filePath, file, {
+                    cacheControl: '3600',
+                    upsert: false
+                });
+
+            if (uploadError) throw uploadError;
+            setUploadProgress(60);
+
+            // Create session record
+            const { error: sessionError } = await supabase
+                .from('sessions')
+                .insert([{
+                    id: sessionId,
+                    user_id: user.id,
+                    status: 'pending'
+                }]);
+            if (sessionError) throw sessionError;
+
+            const { error: imageError } = await supabase
+                .from('session_image')
+                .insert([{
+                    name: fileName,
+                    type: file.type,
+                    size: file.size,
+                    session_id: sessionId,
+                    uploaded_by: user.id
+                }]);
+
+            if (imageError) throw imageError;
+            setUploadProgress(100);
+
+            navigate(`/sessions/${sessionId}`);
+
+        } catch (error) {
+            console.error('Upload error:', error);
+            if (file && user) {
+                await supabase.storage
+                    .from('code-images')
+                    .remove([`${user.id}/${fileName}`])
+                    .catch(e => console.error('Failed to cleanup file:', e));
+            }
+
+            toast({
+                title: "Upload failed",
+                description: error instanceof Error ? error.message : "Upload failed. Please try again.",
+                variant: "destructive",
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         setIsDragging(false);
-
         const file = e.dataTransfer.files[0];
         if (file) handleFile(file);
     }, []);
@@ -106,67 +190,33 @@ const UploadComponent = () => {
         if (file) handleFile(file);
     };
 
-    const handleSubmit = async () => {
-        if (!uploadState.file) return;
-
-        setIsLoading(true);
-        try {
-            // TODO: Implement your file upload logic here
-            // const formData = new FormData();
-            // formData.append('image', uploadState.file);
-            // await uploadToServer(formData);
-
-            toast({
-                title: "Success!",
-                description: "Your code image has been uploaded for analysis.",
-            });
-        } catch (error) {
-            toast({
-                title: "Upload failed",
-                description: "There was an error uploading your image. Please try again.",
-                variant: "destructive",
-            });
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
-    const clearUpload = () => {
-        setUploadState({ file: null, preview: null });
-    };
-
     return (
-        <div className="p-6 space-y-6">
-            <Card className="w-full max-w-4xl mx-auto transition-all duration-500 ease-in-out">
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <CardTitle>Write and Compile</CardTitle>
-                            <CardDescription>
-                                Upload a picture of your handwritten code for analysis
-                            </CardDescription>
-                        </div>
-                        {uploadState.file && !isLoading && (
-                            <CheckCircle2 className="h-8 w-8 text-green-500 animate-in fade-in duration-500" />
-                        )}
-                    </div>
-                </CardHeader>
+        <div className="p-6">
+            <Card className="w-full p-4 mx-auto">
                 <CardContent>
-                    {!uploadState.file ? (
+                    {isLoading ? (
+                        <div className="space-y-4 p-4">
+                            <div className="flex items-center justify-between text-sm">
+                                <span>Uploading image...</span>
+                                <span>{uploadProgress}%</span>
+                            </div>
+                            <Progress value={uploadProgress} className="h-2" />
+                        </div>
+                    ) : (
                         <div
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
                             className={`
-                        relative overflow-hidden
-                        border-2 border-dashed rounded-lg p-12
-                        ${isDragging
+                                relative overflow-hidden
+                                border-2 border-dashed rounded-lg p-12
+                                ${isDragging
                                     ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
                                     : 'border-gray-300 dark:border-gray-700'
                                 }
-                        transition-all duration-300 ease-in-out
-                        cursor-pointer group
-                      `}
+                                transition-all duration-300 ease-in-out
+                                cursor-pointer group
+                            `}
                         >
                             <input
                                 type="file"
@@ -175,7 +225,7 @@ const UploadComponent = () => {
                                 className="hidden"
                                 id="file-upload"
                             />
-                            <label htmlFor="file-upload" className="cursor-pointer block">
+                            <label htmlFor="file-upload" className="cursor-pointer block text-center">
                                 <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
                                 <p className="text-xl font-medium">
                                     Drop your code image here or click to upload
@@ -188,112 +238,10 @@ const UploadComponent = () => {
                                 <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm animate-pulse" />
                             )}
                         </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {isLoading ? (
-                                <div className="space-y-4 p-4">
-                                    <div className="flex items-center justify-between text-sm">
-                                        <span>Uploading {uploadState.file.name}...</span>
-                                        <span>{uploadProgress}%</span>
-                                    </div>
-                                    <Progress value={uploadProgress} className="h-2" />
-                                </div>
-                            ) : (
-                                <div className="relative animate-in fade-in slide-in-from-bottom-4 duration-500">
-                                    <img
-                                        src={uploadState.preview!}
-                                        alt="Preview"
-                                        className="rounded-lg max-h-[400px] w-full object-cover mx-auto shadow-lg"
-                                    />
-                                    <Button
-                                        variant="destructive"
-                                        size="icon"
-                                        className="absolute top-2 right-2 shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
-                                        onClick={clearUpload}
-                                    >
-                                        <X className="h-4 w-4" />
-                                    </Button>
-                                </div>
-                            )}
-                        </div>
                     )}
                 </CardContent>
             </Card>
-
-            {/* Compiler Settings Card */}
-            {showSettings && (
-                <Card className="w-full max-w-4xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-                    <CardHeader>
-                        <div className="flex items-center space-x-2">
-                            <Settings2 className="h-6 w-6 text-gray-500" />
-                            <div>
-                                <CardTitle>Compiler Settings</CardTitle>
-                                <CardDescription>
-                                    Configure how your code should be analyzed
-                                </CardDescription>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Programming Language</label>
-                                <Select
-                                    value={settings.language}
-                                    onValueChange={(value) =>
-                                        setSettings(prev => ({ ...prev, language: value }))
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select language" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="python">Python</SelectItem>
-                                        <SelectItem value="javascript">JavaScript</SelectItem>
-                                        <SelectItem value="java">Java</SelectItem>
-                                        <SelectItem value="cpp">C++</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Optimization Level</label>
-                                <Select
-                                    value={settings.optimization}
-                                    onValueChange={(value) =>
-                                        setSettings(prev => ({ ...prev, optimization: value }))
-                                    }
-                                >
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select optimization" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="speed">Optimize for Speed</SelectItem>
-                                        <SelectItem value="memory">Optimize for Memory</SelectItem>
-                                        <SelectItem value="balanced">Balanced</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-end mt-6">
-                            <Button
-                                onClick={handleSubmit}
-                                disabled={isLoading}
-                                className="relative group"
-                            >
-                                <span className="relative z-10">
-                                    {isLoading ? "Processing..." : "Analyze Code"}
-                                </span>
-                                <div className="absolute inset-0 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-md" />
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
         </div>
     );
 };
-
-
 export default UploadComponent;
