@@ -144,6 +144,7 @@ const SessionDashboard = () => {
               problemStatement={session!.prompt as any}
               code={localCode}
               language={session?.language as Language}
+              prompt={session?.prompt as string}
             />
           </div>
         </div>

@@ -19,12 +19,15 @@ interface TabViewProps {
     problemStatement?: string;
     code?: string;
     language?: Language;
+    prompt?: string;
 }
-export const TabView = ({ imageUrl, problemStatement, code, language }: TabViewProps) => {
+export const TabView = ({ imageUrl, problemStatement, code, language, prompt }: TabViewProps) => {
     const [zoom, setZoom] = useState(1);
 
     return (
+
         <Tabs defaultValue="document" className="flex-1 flex flex-col h-full">
+   
             <div className="h-14 border-b border-gray-200 flex items-center justify-between bg-white">
                 <nav className="flex h-full" aria-label="Tabs">
                     <TabsList className="h-full px-0 border-0 bg-transparent">
@@ -85,11 +88,22 @@ export const TabView = ({ imageUrl, problemStatement, code, language }: TabViewP
             </div>
 
             <TabsContent
-                value="document"
-                className="flex-1 m-0 overflow-auto"
-            >
-                {imageUrl && <ImageViewer imageUrl={imageUrl} zoom={zoom} />}
-            </TabsContent>
+  value="document"
+  className="flex-1 m-0 overflow-auto flex flex-col items-center justify-center text-center p-2"
+>
+  <div className="text-lg font-semibold text-gray-800 p-1">
+    {prompt || "No prompt available."}
+  </div>
+  {imageUrl && (
+    <div className="max-w-full h-auto mt-4 max-w-full overflow-hidden">
+      <ImageViewer
+        imageUrl={imageUrl}
+        zoom={zoom}
+
+      />
+    </div>
+  )}
+</TabsContent>
 
             <TabsContent
                 value="problem"
