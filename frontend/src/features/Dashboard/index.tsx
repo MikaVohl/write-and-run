@@ -77,6 +77,7 @@ int main() {
                         </div>
                     </CardHeader>
                     <CardContent className="p-0">
+                        {/* TODO - Karan Edit Component HERE */}
                         <pre className="p-4 font-mono text-sm">
                             <code className="language-c">{detectedCode}</code>
                         </pre>

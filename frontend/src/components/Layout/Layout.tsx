@@ -48,7 +48,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const navItems = getNavigationItems();
 
     return (
-        <div className="flex h-screen bg-neutral-100 dark:bg-neutral-900">
+        <div className="flex h-screen overflow-hidden bg-neutral-100 dark:bg-neutral-900">
             {/* Sidebar */}
             <aside
                 className={cn(
@@ -143,10 +143,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 </div>
             </aside>
 
-            {/* Main Content */}
             <main className="flex-1 flex flex-col overflow-hidden">
                 <div className="flex-1 overflow-y-auto px-4 py-8">
-                    {children}
+                    <div className="h-full">{children}</div>
                 </div>
                 <Toaster />
             </main>
