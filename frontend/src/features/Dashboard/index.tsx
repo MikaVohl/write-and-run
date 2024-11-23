@@ -13,6 +13,7 @@ const SessionDashboard = () => {
     const { data: session, isLoading: isSessionLoading } = useSession(sessionId!);
     const { data: sessionImage, isLoading: isImageLoading } = useSessionImage(sessionId!);
 
+
     const [editorCode, setEditorCode] = useState<string>("");
     const [compilerOutput, setCompilerOutput] = useState<string>("");
     const [isCompiling, setIsCompiling] = useState<boolean>(false);
@@ -36,6 +37,20 @@ const SessionDashboard = () => {
                     .storage
                     .from('code-images')
                     .createSignedUrl(filePath, 3600); // 1 hour expiry
+
+                console.log(JSON.stringify({ img_url: data!.signedUrl + '.png' }));
+                if (session?.detected_code == null) {
+                    fetch('http://localhost:5001/api/imgtocode', {
+                        method: 'POST', body: JSON.stringify({ img_url: data!.signedUrl + '.png' }), headers: {
+                            "Content-Type": "application/json",
+                            mode: 'no-cors',
+
+                        }
+                    }).then((response) => {
+                        console.log(response);
+                        setEditorCode((response as any)['code']);
+                    });
+                }
 
                 if (error) {
                     console.error('Error getting signed URL:', error);
