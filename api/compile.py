@@ -1,4 +1,3 @@
-from flask import jsonify
 import subprocess
 import os
 import shutil
@@ -35,7 +34,7 @@ def compile_and_run(code, language):
         # Get the configuration for the specified language
         lang_config = ALLOWED_LANGUAGES.get(language)
         if not lang_config:
-            return jsonify({"error": f"Language '{language}' not supported."}), 400
+            {"error": f"Language '{language}' not supported."}, 400
 
         file_extension = lang_config['file_extension']
         timeout = lang_config['timeout']
@@ -64,17 +63,17 @@ def compile_and_run(code, language):
             "stdout": sanitize_output(output),
             "stderr": sanitize_output(error_output),
             "returncode": return_code
-        }
+        }, 200
     
     except subprocess.TimeoutExpired:
         return {
             "success": False,
             "error": f"Execution timed out after {timeout} seconds"
-        }
+        }, 200
     except Exception as e:
         return {
             "success": False,
             "error": str(e)
-        }
+        }, 200
     finally:
         shutil.rmtree(run_dir, ignore_errors=True)

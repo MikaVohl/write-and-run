@@ -54,7 +54,8 @@ def compile():
     if not code or not language:
         return jsonify({"error": "Both 'code' and 'language' are required fields."}), 400
 
-    return compile_and_run(code, language)
+    output = compile_and_run(code, language)
+    return jsonify(output[0]), output[1]
 
 
 # Error handlers
