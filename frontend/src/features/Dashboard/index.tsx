@@ -12,6 +12,7 @@ import { supabase } from '@/supabaseClient';
 import { Loader2 } from "lucide-react";
 import { useTestsGeneration } from "./hooks/useTestGeneration";
 import { useEffect, useState } from "react";
+import { Language } from "@/types/types";
 
 const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -140,6 +141,8 @@ const SessionDashboard = () => {
             <TabView
               imageUrl={imageUrl}
               problemStatement={"MOCK DATA"}
+              code={localCode}
+              language={session?.language as Language}
             />
           </div>
         </div>
