@@ -12,6 +12,12 @@ interface ProcessResponse {
     language: Language;
     concept?: string;
     summary: string;
+    promt?: string;
+}
+
+interface ImageProcessingInput {
+    img_url: string;
+    prompt: string;
 }
 
 export const useImageProcessing = ({
@@ -22,12 +28,12 @@ export const useImageProcessing = ({
     const apiUrl = import.meta.env.VITE_API_URL;
     const queryClient = useQueryClient();
     const processImageMutation = useMutation({
-        mutationFn: async (imgUrl: string) => {
+        mutationFn: async (input: ImageProcessingInput) => {
             // Call to ML API for code detection
             const response = await fetch(apiUrl + 'imgtocode', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ img_url: imgUrl })
+                body: JSON.stringify({ img_url: input.img_url, prompt: input.prompt })
             });
 
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -102,7 +108,7 @@ export const useImageProcessing = ({
 
     useEffect(() => {
         if (imageUrl && session?.status === 'pending') {
-            processImageMutation.mutate(imageUrl);
+            processImageMutation.mutate({img_url: imageUrl, prompt: session.prompt!});
         }
     }, [imageUrl, session?.status]);
 
