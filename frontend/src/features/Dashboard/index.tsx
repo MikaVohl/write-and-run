@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Maximize2, RotateCcw, Share2 } from 'lucide-react';
 import CodeEditor from '@/components/CodeEditor/CodeEditor';
-import {useState} from 'react';
+import { useState } from 'react';
 import CompilerCode from '@/components/CompileCode/CompileCode';
 import Uploader from '@/components/Uploader/Uploader';
 
@@ -31,9 +31,9 @@ int main() {
                 <div className="space-y-6">
                     <Card>
                         <CardHeader className="flex flex-row items-center justify-between">
-                          <Uploader/>
+                            <Uploader />
                         </CardHeader>
-        
+
                     </Card>
 
                     <Card>
@@ -51,18 +51,15 @@ int main() {
                             <span className="text-sm text-gray-500">main.c</span>
                         </div>
                         <div style={{ width: '5%', padding: '20px' }}>
-                            <button  style={{ fontSize: '16px' }}>
-                            Run
+                            <button style={{ fontSize: '16px' }}>
+                                Run
                             </button>
-      </div>
+                        </div>
                     </CardHeader>
                     <CardContent className="p-0">
-                        {/* TODO - Karan Edit Component HERE */}
                         <CodeEditor
                             language="c"
                             code={editorCode}
-
-
                         />
                     </CardContent>
                 </Card>
