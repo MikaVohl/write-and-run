@@ -133,7 +133,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      language_enum: "C" | "Bash" | "Java" | "Python"
+      language_enum: "c" | "bash" | "java" | "python"
       session_status: "pending" | "completed" | "failed"
     }
     CompositeTypes: {
