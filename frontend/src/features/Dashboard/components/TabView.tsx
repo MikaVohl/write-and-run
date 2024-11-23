@@ -14,7 +14,7 @@ export const TabView = ({ imageUrl, problemStatement }: TabViewProps) => {
     return (
         <Tabs defaultValue="document" className="flex-1 bg-white flex flex-col h-full">
             <div className="flex justify-between items-center border-b shrink-0">
-                <TabsList className="rounded-none border-0 bg-transparent h-[49px]">
+                <TabsList className="rounded-none border-0 bg-transparent min-h-[3.5rem]">
                     <TabsTrigger
                         value="document"
                         className="rounded-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
