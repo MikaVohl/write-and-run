@@ -64,6 +64,7 @@ def tests():
         'code': code_out,
         'language': language,
     }
+    print(response)
     return jsonify(response), 201
 
 

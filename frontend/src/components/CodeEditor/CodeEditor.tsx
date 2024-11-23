@@ -31,6 +31,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
       enabled: false,            // Disable the minimap if not needed
     },
     wordWrap: 'on',              // Wrap long lines to prevent horizontal scrolling
+    fontSize: '14px',
   } as const;
 
   // Update the editor code when Monaco Editor content changes
@@ -49,7 +50,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
           value={editorCode}
           options={editorOptions}
           onChange={handleEditorChange} // Updated to use the correct handler
-          
         />
       </div>
     </div>

@@ -107,10 +107,6 @@ const SessionDashboard = () => {
     });
   };
 
-  // const handleMakeTests = () => {
-  //   if (!session?.code) return;
-  //   generateTestsMutation.mutate(session.code);
-  // };
   const handleMakeTests = () => {
     if (!session?.code) return;
     generateTests(session.code);
@@ -155,7 +151,7 @@ const SessionDashboard = () => {
               <CodeEditorSection
                 handleLanguageSelect={handleLanguageChange}
                 language={session?.language!}
-                code={session?.code || ''}
+                code={localCode}
                 isCompiling={isCompiling}
                 onCodeChange={handleCodeChange}
                 onRun={handleRunClick}
@@ -166,7 +162,7 @@ const SessionDashboard = () => {
             <CodeEditorSection
               handleLanguageSelect={handleLanguageChange}
               language={session?.language!}
-              code={session?.code || ''}
+              code={localCode}
               isCompiling={isCompiling}
               onCodeChange={handleCodeChange}
               onRun={handleRunClick}

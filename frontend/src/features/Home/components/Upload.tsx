@@ -5,6 +5,7 @@ import { Progress } from '@radix-ui/react-progress';
 import { Upload } from 'lucide-react';
 import { supabase } from '@/supabaseClient';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -12,6 +13,7 @@ const ACCEPTED_FILE_TYPES = ['image/png', 'image/jpeg', 'image/heic'];
 
 const UploadComponent = () => {
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -96,6 +98,7 @@ const UploadComponent = () => {
                     session_id: sessionId,
                     uploaded_by: user.id
                 }]);
+            queryClient.invalidateQueries({ queryKey: ['sessions'] });
             if (imageError) throw imageError;
             setUploadProgress(100);
 
