@@ -13,6 +13,7 @@ import { Loader2 } from "lucide-react";
 import { useTestsGeneration } from "./hooks/useTestGeneration";
 import { useEffect, useState } from "react";
 import { Language } from "@/types/types";
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -150,8 +151,8 @@ const SessionDashboard = () => {
           {showProcessingOverlay ? (
             <div className="relative h-full">
               <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  <LoadingAnimation />
                   {isGeneratingTests
                     ? "Generating tests..."
                     : "Processing image and detecting code..."
