@@ -27,7 +27,7 @@ def request_code(img_url=None, img_base64=None):
     Return only the following:
     1. The name of the coding language used (either C, Bash, Java, or Python), bolded in markdown.
     2. A markdown code block containing the extracted code. Use triple backticks **without any language specifier**.
-    3. A short sentence (3-8 words) describing the programming concept (e.g., "Socket Programming in C").
+    3. A short sentence (1-5 words) describing the programming concept (e.g., "Socket Programming", "Memory Manipulation", "Recursion").
     Ensure the output adheres to this format:
     **Language Name**
     ```<Code here>```<Short description of the coding concept used>
@@ -67,13 +67,45 @@ def request_code(img_url=None, img_base64=None):
         sys.exit(1)
 
 def generate_tests(code, language):
-    instructions = f"Given this following {language} code, add 3 useful test cases to the code. These test cases will run from the outermost scope of the script, and call the function in question. If the provided code is not a function, create a function that will be called by the test cases. Return the entire code block in a markdown code block, denoted using triple backtick, without the language. Do not return anything else. Code: ```{code}```"
+    # instructions = f"Given this following {language} code, add 3 useful test cases to the code. These test cases will run from the outermost scope of the script, and call the function in question. If the provided code is not a function, create a function that will be called by the test cases. Return the entire code block in a markdown code block, denoted using triple backtick, without the language. Do not return anything else. Code: ```{code}```"
+
+    system_instruction = f"""
+    You are an expert assistant for generating test cases for code. 
+    Your task is to ensure that the code is runnable, tested, and outputs meaningful results.
+    Follow these rules:
+    1. Identify whether the provided code already includes a callable function.
+       - If it doesn't, encapsulate the logic into a function.
+    2. Add three meaningful test cases:
+       - One with typical inputs.
+       - One testing an edge case (e.g., smallest/largest valid input).
+       - One with invalid/unexpected input (if applicable).
+    3. Add necessary imports and entry points for execution:
+       - Python: Place test cases under `if __name__ == "__main__":`.
+       - C: Add a `main` function that calls the function(s).
+       - Java: Add a `main` method to call the function(s).
+       - Bash: Add inline, executable test cases.
+    4. Ensure the output is a complete, runnable code block.
+    5. Return the updated code, using triple backticks to denote the code block without specifying the language.
+    """
+
+    user_instruction = f"""
+    Provided Code:
+    ```
+    {code}
+    ```
+    Enhance the code with test cases as described above and return the full updated code. 
+    Do not include any additional text or explanations.
+    """
 
     messages = [
         {
+            "role": "system",
+            "content": system_instruction
+        },
+        {
             "role": "user",
             "content": [
-                {"type": "text", "text": instructions},
+                {"type": "text", "text": user_instruction},
             ]
         }
     ]
