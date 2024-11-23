@@ -11,6 +11,7 @@ interface ProcessResponse {
     code: string;
     language: Language;
     concept?: string;
+    summary: string;
 }
 
 export const useImageProcessing = ({
@@ -42,6 +43,7 @@ export const useImageProcessing = ({
                     .update({
                         code: data.code,
                         detected_code: data.code,
+                        summary: data.summary,
                         language: detectedLanguage,
                         concept: data.concept,
                         status: 'completed'
