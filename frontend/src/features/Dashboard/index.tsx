@@ -5,13 +5,18 @@ import CodeEditor from '@/components/CodeEditor/CodeEditor';
 import { useState, useEffect } from 'react';
 import CompilerCode from '@/components/CompileCode/CompileCode';
 import { useParams } from 'react-router-dom';
-import { useSession, useSessionImage } from '@/api';
+import { useSession, useSessionImage, useUpdateSession } from '@/api';
 import { supabase } from '@/supabaseClient';
 
 const SessionDashboard = () => {
     const { sessionId } = useParams<{ sessionId: string }>();
+    // TODO - Validate as UUID before Proceeding
+
+    // TODO - Try to fetch session. If returns null, then redirect to home.    
+    
     const { data: session, isLoading: isSessionLoading } = useSession(sessionId!);
     const { data: sessionImage, isLoading: isImageLoading } = useSessionImage(sessionId!);
+    const updateSession = useUpdateSession(session!.id);
 
 
     const [editorCode, setEditorCode] = useState<string>("");
@@ -55,7 +60,12 @@ const SessionDashboard = () => {
                             console.log(data); // Response JSON
 
                             // Update DB
-                            
+                            updateSession.mutateAsync({
+                                detected_code: data.code, // Set the detected code
+                                code: data.code,         // Initialize editor code with detected code
+                                language: data.language  // Update language if provided by API
+                            });
+
                             setEditorCode(data.code); // Use the 'code' field from the response
                         })
                 }
