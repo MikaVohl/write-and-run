@@ -9,7 +9,8 @@ import {
     Book,
     DollarSign,
     ShoppingCart,
-    Mail
+    Mail,
+    Code
 } from 'lucide-react';
 
 
@@ -27,5 +28,5 @@ export const Icons = {
     budget: DollarSign,
     groceries: ShoppingCart,
     mail: Mail,
-
+    code: Code
 };

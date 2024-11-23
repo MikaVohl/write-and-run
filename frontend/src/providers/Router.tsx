@@ -5,6 +5,8 @@ import Layout from "@/components/Layout/Layout";
 import { Icons, Icon } from '@/components/ui/icons';
 import Home from "@/features/Home";
 import Profile from "@/features/Profile";
+import SessionDashboard from "@/features/Dashboard";
+import Sessions from "@/features/Sessions";
 
 const ProtectedRoute = () => {
     const { user, isLoading } = useAuthContext();
@@ -26,34 +28,60 @@ const ProtectedRoute = () => {
 
 interface Route {
     name: string;
-    component: React.ReactNode;
-    href: string;
+    path: string;           // The actual path with parameters if any
+    href?: string;          // The link to show in navigation (if different from path)
     icon: Icon;
+    component: React.ReactNode;
+    showInNav?: boolean;    // Whether to show in navigation
 }
 
 export const Routes: Route[] = [
     {
         name: "Home",
+        path: "/",
         href: "/",
         component: <Home />,
         icon: Icons.home,
+        showInNav: true,
+    },
+    {
+        name: "Sessions",
+        path: "/sessions",
+        href: "/sessions",
+        icon: Icons.code,
+        component: <Sessions />,
+        showInNav: true,
+    },
+    {
+        name: "Session Details",
+        path: "/sessions/:sessionId",
+        icon: Icons.code,
+        component: <SessionDashboard />,
+        showInNav: false,
     },
     {
         name: "Profile",
+        path: "/profile",
         href: "/profile",
         icon: Icons.user,
         component: <Profile />,
+        showInNav: true,
     },
 ]
+
+export const getNavigationItems = () => Routes.filter(route => route.showInNav);
+
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <ProtectedRoute />,
-        children: Routes.map((route) => ({
-            path: route.href === "/" ? "" : route.href.slice(1),
-            element: route.component
-        })),
+        children: [
+            ...Routes.map((route) => ({
+                path: route.path === "/" ? "" : route.path.slice(1),
+                element: route.component
+            })),
+        ],
     },
     {
         path: "/login",
