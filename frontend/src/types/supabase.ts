@@ -96,6 +96,7 @@ export type Database = {
         Row: {
           code: string | null
           compilation_output: string | null
+          concept: string | null
           created_at: string | null
           detected_code: string | null
           id: string
@@ -106,6 +107,7 @@ export type Database = {
         Insert: {
           code?: string | null
           compilation_output?: string | null
+          concept?: string | null
           created_at?: string | null
           detected_code?: string | null
           id: string
@@ -116,6 +118,7 @@ export type Database = {
         Update: {
           code?: string | null
           compilation_output?: string | null
+          concept?: string | null
           created_at?: string | null
           detected_code?: string | null
           id?: string
