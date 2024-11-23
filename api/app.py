@@ -13,7 +13,13 @@ def imgtocode():
     json = request.json
     image_url = json['image_url']
     code = request_code(image_url)
+    code, language = request_code(image_url)
     response = {
-        'code': code
+        'code': code,
+        'language': language,
     }
     return jsonify(response), 201
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
