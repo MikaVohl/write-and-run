@@ -4,10 +4,10 @@ import MonacoEditor from '@monaco-editor/react';
 interface CodeEditorProps {
   language: string;
   code: string;
-
+  onChange: (newCode: string) => void; // Expect onChange prop to handle code changes externally
 }
 
-const CodeEditor: React.FC<CodeEditorProps> = ({ language, code}) => {
+const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => {
   const [editorCode, setEditorCode] = useState<string>(code);
 
   useEffect(() => {
@@ -20,10 +20,13 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code}) => {
     theme: 'vs-dark',
   };
 
-  const handleEditorChange = (newCode: string | undefined) => {
-    setEditorCode(newCode || '');
+  // Update the editor code when Monaco Editor content changes
+  const handleEditorChange = (newValue: string | undefined) => {
+    // Ensure newValue is always a string
+    const updatedCode = newValue || '';
+    setEditorCode(updatedCode);
+    onChange(updatedCode); // Pass the updated code to the parent component
   };
-
 
   return (
     <div style={{ display: 'flex', height: '100vh' }}>
@@ -32,10 +35,9 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code}) => {
           language={language}
           value={editorCode}
           options={editorOptions}
-          onChange={handleEditorChange}
+          onChange={handleEditorChange} // Updated to use the correct handler
         />
       </div>
-
     </div>
   );
 };
