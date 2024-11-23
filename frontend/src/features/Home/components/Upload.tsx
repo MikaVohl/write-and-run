@@ -6,6 +6,7 @@ import { Upload } from 'lucide-react';
 import { supabase } from '@/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
+import Prompt from './Prompt';
 
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -17,7 +18,16 @@ const UploadComponent = () => {
     const [isDragging, setIsDragging] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const [imagePreview, setImagePreview] = useState('');
+    const [file, setFile] = useState<File | null>(null);
     const { toast } = useToast();
+
+    const handlePromptSubmit = (content: string) => {
+        if (!file) return;
+        handleSubmit(file, content);
+  
+      };
+    
 
     const validateFile = (file: File): boolean => {
         if (!ACCEPTED_FILE_TYPES.includes(file.type)) {
@@ -41,17 +51,9 @@ const UploadComponent = () => {
         return true;
     };
 
-    const handleFile = async (file: File) => {
-        if (!validateFile(file)) return;
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            handleSubmit(file);  // Automatically start upload
-        };
-        reader.readAsDataURL(file);
-    };
 
-    const handleSubmit = async (file: File) => {
+    const handleSubmit = async (file: File, prompt: string) => {
         setIsLoading(true);
         setUploadProgress(0);
         const { data: { user } } = await supabase.auth.getUser();
@@ -82,7 +84,8 @@ const UploadComponent = () => {
                 .insert([{
                     id: sessionId,
                     user_id: user.id,
-                    status: 'pending'
+                    status: 'pending',
+                    prompt: prompt,
                 }]);
             if (sessionError) throw sessionError;
 
@@ -148,8 +151,19 @@ const UploadComponent = () => {
         if (file) handleFile(file);
     };
 
+    const handleFile = async (file: File) => {
+        if (!validateFile(file)) return;
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+        setFile(file);
+    };
+
     return (
-        <div className="p-6">
+        <div className="p-6 space-y-6">
             {isLoading ? (
                 <div className="space-y-4 p-4">
                     <div className="flex items-center justify-between text-sm">
@@ -158,6 +172,22 @@ const UploadComponent = () => {
                     </div>
                     <Progress value={uploadProgress} />
                 </div>
+            ) : imagePreview ? (
+                <div className="space-y-6 transition-all duration-300">
+                    {/* Image Preview */}
+                    <div className="relative max-h-[400px] overflow-hidden rounded-lg">
+                        <img 
+                            src={imagePreview} 
+                            alt="Uploaded preview" 
+                            className="w-full object-contain"
+                        />
+                    </div>
+                    
+                    {/* Prompt appears below the image */}
+                    <div className="transition-all duration-300 ease-in-out">
+                        <Prompt onSubmit={handlePromptSubmit}/>
+                    </div>
+                </div>
             ) : (
                 <div
                     onClick={triggerFileInput}
@@ -165,15 +195,15 @@ const UploadComponent = () => {
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
                     className={`
-                                relative overflow-hidden
-                                border-2 border-dashed rounded-lg p-12 py-40
-                                ${isDragging
+                        relative overflow-hidden
+                        border-2 border-dashed rounded-lg p-12 py-40
+                        ${isDragging
                             ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
                             : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:bg-blue-950/20'
                         }
-                                transition-all duration-300 ease-in-out
-                                cursor-pointer
-                            `}
+                        transition-all duration-300 ease-in-out
+                        cursor-pointer
+                    `}
                 >
                     <input
                         type="file"
@@ -199,4 +229,5 @@ const UploadComponent = () => {
         </div>
     );
 };
+
 export default UploadComponent;
