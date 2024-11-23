@@ -1,8 +1,0 @@
-
-const HomeGraph = () => {
-    return (
-        <>
-
-        </>
-    )
-};
