@@ -17,7 +17,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
   const editorOptions = {
     selectOnLineNumbers: true,
     automaticLayout: true,
-    theme: 'vs-dark',
+    theme: 'light',
   };
 
   // Update the editor code when Monaco Editor content changes
