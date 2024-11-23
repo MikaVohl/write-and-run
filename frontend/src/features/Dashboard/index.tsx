@@ -16,7 +16,7 @@ const SessionDashboard = () => {
     
     const { data: session, isLoading: isSessionLoading } = useSession(sessionId!);
     const { data: sessionImage, isLoading: isImageLoading } = useSessionImage(sessionId!);
-    const updateSession = useUpdateSession(session!.id);
+    const updateSession = useUpdateSession(sessionId!);
 
 
     const [editorCode, setEditorCode] = useState<string>("");
