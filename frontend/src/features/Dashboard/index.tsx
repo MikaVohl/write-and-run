@@ -78,6 +78,26 @@ const SessionDashboard = () => {
     getSignedUrl();
   }, [sessionImage, session?.user_id]);
 
+  const makeTests = async () => {
+    console.log(editorCode);
+    console.log(language);
+
+    const response = await fetch('http://localhost:3000/api/generatetests', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        code: editorCode,
+        language: language.toLowerCase(),
+      }),
+    });
+
+    const data = await response.json();
+    setEditorCode(data.code);
+    setLanguage(data.language);
+  };
+
   useEffect(() => {
     const processImage = async () => {
       if (!imageUrl || !sessionId || session?.status !== 'pending') return;
@@ -98,6 +118,7 @@ const SessionDashboard = () => {
         await updateSessionMutation.mutateAsync(data.code);
         setEditorCode(data.code);
         setLanguage(data.language);
+        console.log(data.language);
       } catch (error) {
         console.error('Error processing image:', error);
       }
@@ -122,6 +143,7 @@ const SessionDashboard = () => {
       });
 
       const data = await response.json();
+      console.log(data);
       if (!(data.stdout == "")) {
         setCompilerOutput(data.stdout|| "No output");
       } else {
@@ -166,6 +188,7 @@ const SessionDashboard = () => {
             isCompiling={isCompiling}
             onCodeChange={setEditorCode}
             onRun={handleRunClick}
+            makeTests={makeTests}
           />
         </div>
       </div>
