@@ -40,8 +40,56 @@ ALLOWED_LANGUAGES = {
 MAX_CODE_LENGTH = 50000  # characters
 TEMP_DIR = tempfile.mkdtemp(prefix='secure_compiler_')
 
+def format_manual_page(raw_text):
+    """
+    Format a raw manual page text by:
+    1. Removing backslash-b sequences (\b) and their preceding characters
+    2. Properly indenting sections
+    3. Maintaining line breaks
+    4. Cleaning up unnecessary spaces
+    """
+    # First, handle the \b sequences
+    cleaned_text = ""
+    i = 0
+    while i < len(raw_text):
+        if i + 1 < len(raw_text) and raw_text[i+1:i+2] == '\b':
+            # Skip both the character and the \b
+            i += 2
+        else:
+            cleaned_text += raw_text[i]
+            i += 1
+    
+    # Split into lines
+    lines = cleaned_text.split('\n')
+    formatted_lines = []
+    current_indent = 0
+    
+    for line in lines:
+        # Skip empty lines
+        if not line.strip():
+            formatted_lines.append('')
+            continue
+            
+        # Detect section headers (all caps followed by colon)
+        if any(section in line.upper() for section in ['NAME', 'SYNOPSIS', 'DESCRIPTION', 'EXIT STATUS', 'SEE ALSO', 'STANDARDS']):
+            current_indent = 0
+            formatted_lines.append('\n' + line.strip())
+        else:
+            # Handle normal text lines
+            if line.startswith(' '):
+                # Preserve indentation for option descriptions
+                indent = len(line) - len(line.lstrip())
+                formatted_line = ' ' * indent + line.strip()
+            else:
+                formatted_line = ' ' * current_indent + line.strip()
+            
+            formatted_lines.append(formatted_line)
+    
+    return '\n'.join(formatted_lines)
+
 def sanitize_output(output: str, max_length: int = 10000) -> str:
     """Sanitize and truncate command output."""
+
     if output is None:
         return ""
     return output[:max_length]
@@ -116,6 +164,7 @@ def compile_and_run(code, language):
             if not success:
                 return {
                     "success": False,
+                    "stdout": "",
                     "error": f"Compilation error: {compile_error}"
                 }, 200
         
@@ -138,6 +187,7 @@ def compile_and_run(code, language):
                     if not check_and_install(process.stderr.split("'")[1]):
                         return {
                             "success": False,
+                            "stdout": "",
                             "error": "ModuleNotFoundError: Something wrong when installing the module"
                         }, 200
                     
@@ -148,47 +198,74 @@ def compile_and_run(code, language):
                         timeout=timeout,
                         cwd=run_dir
                     )
+
+                if process.returncode != 0:
+                    return {
+                        "success": False,
+                        "stdout": sanitize_output(process.stdout),
+                        "error": sanitize_output(process.stderr)
+                    }, 200
                 
                 return {
                     "success": True,
                     "stdout": sanitize_output(process.stdout),
-                    "stderr": sanitize_output(process.stderr),
-                    "returncode": process.returncode
+                    "error": sanitize_output(process.stderr),
                 }, 200
                 
             except subprocess.TimeoutExpired:
                 return {
                     "success": False,
+                    "stdout": "",
                     "error": f"Execution timed out after {timeout} seconds"
                 }, 200
         
         # Handle other languages
         else:
             try:
-                process = subprocess.run(
-                    run_command,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout,
-                    cwd=run_dir
-                )
-                
+                if language == "bash": 
+                    process = subprocess.run(
+                        code,
+                        capture_output=True,
+                        text=True,
+                        shell=True,
+                        timeout=timeout,
+         
+                    )
+                    process.stdout = format_manual_page(process.stdout)
+                else:
+                    process = subprocess.run(
+                        run_command,
+                        capture_output=True,
+                        text=True,
+                        timeout=timeout,
+                        cwd=run_dir
+                    )
+            
+                if process.stderr != "":
+                    return {
+                        "success": False,
+                        "stdout": sanitize_output(process.stdout),
+                        "error": sanitize_output(process.stderr),
+                    }, 200
+    
+
                 return {
                     "success": True,
                     "stdout": sanitize_output(process.stdout),
-                    "stderr": sanitize_output(process.stderr),
-                    "returncode": process.returncode
+                    "error": sanitize_output(process.stderr),
                 }, 200
                 
             except subprocess.TimeoutExpired:
                 return {
                     "success": False,
+                    "stdout": "",
                     "error": f"Execution timed out after {timeout} seconds"
                 }, 200
             
     except Exception as e:
         return {
             "success": False,
+            "stdout": "",
             "error": str(e)
         }, 200
     finally:
