@@ -1,6 +1,13 @@
-import { useState, useEffect } from 'react';
-import { ChevronDown, Check } from 'lucide-react';
+import React from 'react';
 import { Language } from '@/types/types';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { cn } from '@/lib/utils';
 
 export interface LanguageDrop {
   id: Language | undefined;
@@ -11,10 +18,12 @@ export interface LanguageDrop {
 export interface LanguageDropdownProps {
   language?: string;
   onSelect?: (language: LanguageDrop) => void;
+  disabled?: boolean;
+  className?: string;
+
 }
 
 const languages: LanguageDrop[] = [
-  { id: undefined, name: 'Find Language' },
   { id: Language.python, name: 'Python' },
   { id: Language.c, name: 'C' },
   { id: Language.bash, name: 'Bash' },
@@ -24,62 +33,48 @@ const languages: LanguageDrop[] = [
 const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
   language,
   onSelect,
+  disabled = false,
+  className
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<LanguageDrop>(() => {
-    return languages.find(lang => lang.id === language) || languages[0];
-  });
-
-  // Update selected language when prop changes
-  useEffect(() => {
-    const newLanguage = languages.find(lang => lang.id === language);
-    if (newLanguage) {
-      setSelectedLanguage(newLanguage);
+  const handleValueChange = (value: string) => {
+    const selectedLanguage = languages.find(lang => lang.id === value);
+    if (selectedLanguage) {
+      onSelect?.(selectedLanguage);
     }
-  }, [language]);
-
-  const handleSelect = (language: LanguageDrop) => {
-    if (language.id === undefined) return;
-    setSelectedLanguage(language);
-    setIsOpen(false);
-    onSelect?.(language);
   };
 
   return (
-    <div className="relative w-64">
-      {/* Selected Language Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-4 py-2 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    <div>
+      <Select
+        value={language}
+        onValueChange={handleValueChange}
+        disabled={disabled}
       >
-        <span className="text-gray-700">{selectedLanguage.name}</span>
-        <ChevronDown
-          className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
-            isOpen ? 'transform rotate-180' : ''
-          }`}
-        />
-      </button>
-
-      {/* Dropdown Menu */}
-      {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
-          <ul className="py-1 max-h-60 overflow-auto">
-            {languages.map((language) => (
-              <li key={language.id}>
-                <button
-                  onClick={() => handleSelect(language)}
-                  className="w-full px-4 py-2 text-left flex items-center justify-between hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                >
-                  <span className="text-gray-700">{language.name}</span>
-                  {selectedLanguage.id === language.id && (
-                    <Check className="w-4 h-4 text-blue-500" />
-                  )}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+        <SelectTrigger
+          className={cn(
+            "w-64 h-9 px-3 py-2",
+            "bg-white dark:bg-neutral-900",
+            "border-gray-200 dark:border-neutral-800",
+            "hover:bg-gray-50 dark:hover:bg-neutral-800",
+            className
+          )}
+        >
+          <SelectValue placeholder="Select language" />
+        </SelectTrigger>
+        <SelectContent>
+          {languages.map((lang) => (
+            <SelectItem
+              key={lang.id}
+              value={lang.id || ''}
+              className="h-9"
+            >
+              <div className="flex items-center justify-between">
+                {lang.name}
+              </div>
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 };

@@ -25,10 +25,9 @@ export const CodeEditorSection = ({
     makeTests
 }: CodeEditorSectionProps) => {
 
-    
     return (
         <div className="flex flex-col h-full">
-            <div className="flex items-center justify-between px-4 py-2 border-b bg-white dark:bg-neutral-900">
+            <div className="flex items-center justify-between px-4 min-h-[3.5rem] py-2 border-b bg-white dark:bg-neutral-900">
                 <LanguageDropdown language={language} onSelect={handleLanguageSelect}/>
                 <div className="flex gap-2">
                     <Button
