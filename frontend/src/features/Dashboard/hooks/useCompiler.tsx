@@ -5,6 +5,8 @@ import { Language } from '@/types/types';
 interface CompileResponse {
     stdout: string;
     stderr: string;
+    error?: string;
+    success: boolean;
 }
 interface CompileInput {
     code: string;
@@ -31,9 +33,14 @@ export const useCompiler = () => {
             setIsCompiling(true);
         },
         onSuccess: (data) => {
-            if (data.stdout !== "") {
+            console.log(data);
+            if (data['success'] == true) {
                 setCompilerOutput(data.stdout);
-            } else {
+            } else if (data['success'] == false) {
+                console.log("TEST");
+                setCompilerOutput(data.error!);
+            } 
+            else {
                 const commaIndex = data.stderr.indexOf(",");
                 const rest = commaIndex !== -1 ? data.stderr.substring(commaIndex + 1).trim() : "";
                 setCompilerOutput(rest.trim() || "Compilation error occurred");
