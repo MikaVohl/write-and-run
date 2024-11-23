@@ -22,13 +22,15 @@ def request_code(img_url=None, img_base64=None):
     3. Based on the programming language, fix any errors that are likely to be ambiguous to a grader.
     4. Describe the primary programming concept used in the code in 1-4 words (e.g., 'Recursion', 'Socket Programming', 'Data Manipulation', 'Memory Management', 'Sorting Algorithms', etc.).
     5. Summarize the objective of the code in 1-5 words (e.g. 'Defining dynamic array', 'Merge sort implementation', 'Compute fibonacci number', etc.).
+    6. Suggest some points of improvement for the code, if any. Max length of 3 sentences.
 
     Return the output in this specific JSON format in plaintext, with no triple backticks, include spaces, tabs, and newlines as needed:
     {
         "language": "<language name>",
         "code": "<code as a single string>",
         "concept": "<short description of the programming concept>",
-        "summary": "<short functionality summary>"
+        "summary": "<short functionality summary>",
+        "analysis: "<analysis of the code>"
     }
     """
 
@@ -39,9 +41,10 @@ def request_code(img_url=None, img_base64=None):
         },
         {
             "role": "user",
-            "content": [ img_request ]
+            "content": [img_request]
         }
     ]
+    print(messages)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -62,13 +65,14 @@ def request_code(img_url=None, img_base64=None):
             code = data.get("code", "")
             concept = data.get("concept", "")
             summary = data.get("summary", "")
+            analysis = data.get("analysis", "")
 
             # Optionally, you can perform additional validation here
             if not language or not code:
                 raise ValueError("Essential fields are missing in the response.")
 
             # Return the extracted values
-            return code, language, concept, summary
+            return code, language, concept, summary, analysis
         except json.JSONDecodeError as e:
             print(f"Error decoding JSON content: {e}")
         except ValueError as e:
@@ -78,8 +82,9 @@ def request_code(img_url=None, img_base64=None):
         print("Error: No response received from the model.")
         sys.exit(1)
 
-def generate_tests(code, language):
+def generate_tests(code, language, context=None):
     # TODO: Include expected output in the test cases
+    # TODO: Check if it ever actually doesn't make tests
     system_instruction = f"""
     You are an expert assistant for generating test cases for given input {language} code.
     Your task is to ensure that the code is runnable, tested, and outputs meaningful results.
@@ -107,8 +112,6 @@ def generate_tests(code, language):
     6. Return the JSON as specified above.
     """
 
-    user_instruction = code
-
     messages = [
         {
             "role": "system",
@@ -117,10 +120,11 @@ def generate_tests(code, language):
         {
             "role": "user",
             "content": [
-                {"type": "text", "text": user_instruction},
+                {"type": "text", "text": f"User given context of the following code: \"{context}\"\ncode: {code}"} if context else {"type": "text", "text": code},
             ]
         }
     ]
+    print(messages)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
