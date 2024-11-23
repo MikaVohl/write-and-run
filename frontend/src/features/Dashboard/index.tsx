@@ -11,6 +11,7 @@ import { useCompiler } from "./hooks/useCompiler";
 import { useImageProcessing } from "./hooks/useImageProcessing";
 import { LanguageDrop } from "./components/LanguageDropdown";
 import { supabase } from '@/supabaseClient';
+import { Loader2 } from "lucide-react";
 
 const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
@@ -122,11 +123,8 @@ const SessionDashboard = () => {
     return <LoadingState />;
   }
 
-  // Error States
-  if (processingError) {
-    console.error('Image processing error:', processingError);
-    // You might want to show an error UI here
-  }
+  const showProcessingOverlay = isProcessing || session?.status === 'pending';
+
 
   return (
     <div className="flex flex-col h-full">
@@ -143,15 +141,35 @@ const SessionDashboard = () => {
           </div>
         </div>
         <div className="h-full overflow-hidden">
-          <CodeEditorSection
-            handleLanguageSelect={handleLanguageChange}
-            language={session?.language!}
-            code={session?.code || ''}
-            isCompiling={isCompiling || isProcessing}
-            onCodeChange={handleCodeChange}
-            onRun={handleRunClick}
-            makeTests={handleMakeTests}
-          />
+          {showProcessingOverlay ? (
+            <div className="relative h-full">
+              <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                  Processing image and detecting code...
+                </p>
+              </div>
+              <CodeEditorSection
+                handleLanguageSelect={handleLanguageChange}
+                language={session?.language!}
+                code={session?.code || ''}
+                isCompiling={isCompiling}
+                onCodeChange={handleCodeChange}
+                onRun={handleRunClick}
+                makeTests={handleMakeTests}
+              />
+            </div>
+          ) : (
+            <CodeEditorSection
+              handleLanguageSelect={handleLanguageChange}
+              language={session?.language!}
+              code={session?.code || ''}
+              isCompiling={isCompiling}
+              onCodeChange={handleCodeChange}
+              onRun={handleRunClick}
+              makeTests={handleMakeTests}
+            />
+          )}
         </div>
       </div>
       <CompilerOutput
