@@ -101,7 +101,9 @@ export type Database = {
           detected_code: string | null
           id: string
           language: Database["public"]["Enums"]["language_enum"] | null
+          prompt: string | null
           status: Database["public"]["Enums"]["session_status"]
+          summary: string | null
           user_id: string | null
         }
         Insert: {
@@ -112,7 +114,9 @@ export type Database = {
           detected_code?: string | null
           id: string
           language?: Database["public"]["Enums"]["language_enum"] | null
+          prompt?: string | null
           status: Database["public"]["Enums"]["session_status"]
+          summary?: string | null
           user_id?: string | null
         }
         Update: {
@@ -123,7 +127,9 @@ export type Database = {
           detected_code?: string | null
           id?: string
           language?: Database["public"]["Enums"]["language_enum"] | null
+          prompt?: string | null
           status?: Database["public"]["Enums"]["session_status"]
+          summary?: string | null
           user_id?: string | null
         }
         Relationships: []

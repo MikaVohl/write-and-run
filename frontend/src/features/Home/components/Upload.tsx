@@ -119,6 +119,9 @@ const UploadComponent = () => {
             setIsLoading(false);
         }
     };
+    const triggerFileInput = () => {
+        document.getElementById('file-upload')?.click();
+    };
 
     const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
@@ -144,55 +147,52 @@ const UploadComponent = () => {
 
     return (
         <div className="p-6">
-            <Card className="w-full p-4 mx-auto">
-                <CardContent>
-                    {isLoading ? (
-                        <div className="space-y-4 p-4">
-                            <div className="flex items-center justify-between text-sm">
-                                <span>Uploading image...</span>
-                                <span>{uploadProgress}%</span>
-                            </div>
-                            <Progress value={uploadProgress} className="h-2" />
-                        </div>
-                    ) : (
-                        <div
-                            onDrop={handleDrop}
-                            onDragOver={handleDragOver}
-                            onDragLeave={handleDragLeave}
-                            className={`
+            {isLoading ? (
+                <div className="space-y-4 p-4">
+                    <div className="flex items-center justify-between text-sm">
+                        <span>Uploading image...</span>
+                        <span>{uploadProgress}%</span>
+                    </div>
+                    <Progress value={uploadProgress} />
+                </div>
+            ) : (
+                <div
+                    onClick={triggerFileInput}
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    className={`
                                 relative overflow-hidden
                                 border-2 border-dashed rounded-lg p-12 py-40
                                 ${isDragging
-                                    ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
-                                    : 'border-gray-300 dark:border-gray-700'
-                                }
+                            ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20'
+                            : 'border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:bg-blue-950/20'
+                        }
                                 transition-all duration-300 ease-in-out
-                                cursor-pointer group
+                                cursor-pointer
                             `}
-                        >
-                            <input
-                                type="file"
-                                accept=".png,.jpg,.jpeg,.heic"
-                                onChange={handleFileInput}
-                                className="hidden"
-                                id="file-upload"
-                            />
-                            <label htmlFor="file-upload" className="cursor-pointer block text-center">
-                                <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
-                                <p className="text-xl font-medium">
-                                    Drop your code image here or click to upload
-                                </p>
-                                <p className="text-sm text-gray-500 mt-2">
-                                    PNG, JPG, HEIC • Max 10MB
-                                </p>
-                            </label>
-                            {isDragging && (
-                                <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm animate-pulse" />
-                            )}
-                        </div>
+                >
+                    <input
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.heic"
+                        onChange={handleFileInput}
+                        className="hidden"
+                        id="file-upload"
+                    />
+                    <div className="text-center">
+                        <Upload className="w-16 h-16 mx-auto mb-4 text-gray-400 group-hover:text-blue-500 transition-colors duration-300" />
+                        <p className="text-xl font-medium">
+                            Drop your code image here or click to upload
+                        </p>
+                        <p className="text-sm text-gray-500 mt-2">
+                            PNG, JPG, HEIC • Max 10MB
+                        </p>
+                    </div>
+                    {isDragging && (
+                        <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm animate-pulse" />
                     )}
-                </CardContent>
-            </Card>
+                </div>
+            )}
         </div>
     );
 };
