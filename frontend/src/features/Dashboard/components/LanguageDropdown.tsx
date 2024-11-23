@@ -1,39 +1,45 @@
 // LanguageDropdown.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 
-interface Language {
+export interface Language {
   id: string;
   name: string;
   icon?: string;
 }
 
-interface LanguageDropdownProps {
+export interface LanguageDropdownProps {
+  language?: string;
   onSelect?: (language: Language) => void;
-  defaultLanguage?: Language;
 }
 
 const languages: Language[] = [
+  { id: 'placeholder', name: 'Find Language' },
   { id: 'python', name: 'Python' },
-  { id: 'javascript', name: 'JavaScript' },
-  { id: 'typescript', name: 'TypeScript' },
+  { id: 'c', name: 'C' },
+  { id: 'bash', name: 'Bash' },
   { id: 'java', name: 'Java' },
-  { id: 'cpp', name: 'C++' },
-  { id: 'csharp', name: 'C#' },
-  { id: 'ruby', name: 'Ruby' },
-  { id: 'go', name: 'Go' },
-  { id: 'rust', name: 'Rust' },
-  { id: 'swift', name: 'Swift' },
 ];
 
 const LanguageDropdown: React.FC<LanguageDropdownProps> = ({
+  language,
   onSelect,
-  defaultLanguage = languages[0],
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState<Language>(defaultLanguage);
+  const [selectedLanguage, setSelectedLanguage] = useState<Language>(() => {
+    return languages.find(lang => lang.id === language) || languages[0];
+  });
+
+  // Update selected language when prop changes
+  useEffect(() => {
+    const newLanguage = languages.find(lang => lang.id === language);
+    if (newLanguage) {
+      setSelectedLanguage(newLanguage);
+    }
+  }, [language]);
 
   const handleSelect = (language: Language) => {
+    if (language.id === 'placeholder') return;
     setSelectedLanguage(language);
     setIsOpen(false);
     onSelect?.(language);

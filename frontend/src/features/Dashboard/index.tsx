@@ -8,6 +8,7 @@ import { CompilerOutput } from './components/CompilerOutput';
 import { CodeEditorSection } from './components/CodeEditor';
 import { TabView } from './components/TabView';
 import { cn } from '@/lib/utils';
+import { Language } from './components/LanguageDropdown';
 
 interface UpdateSessionInput {
   id: string;
@@ -29,6 +30,12 @@ const SessionDashboard = () => {
   const [isCompiling, setIsCompiling] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>("");
   const [isCompilerExpanded, setIsCompilerExpanded] = useState(true);
+
+  const handleLanguageChange = (language: Language) => {
+    console.log('Language selected in grandparent:', language);
+    setLanguage(language.id); // Update state or handle as needed
+  };
+
 
   const updateSessionMutation = useMutation({
     mutationFn: (code: string) => {
@@ -161,6 +168,8 @@ const SessionDashboard = () => {
 
         <div className="h-full overflow-hidden">
           <CodeEditorSection
+            onLanguageChange={handleLanguageChange}
+            handleLanguageSelect={handleLanguageChange} // Add this line
             language={language || 'Upload to detect language'}
             code={editorCode}
             isCompiling={isCompiling}
