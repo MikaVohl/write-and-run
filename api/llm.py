@@ -4,7 +4,7 @@ from openai import OpenAI
 client = OpenAI()
 
 def request_code(img_url=None, img_base64=None):
-    instructions = "Please transcribe the content of this image into code. Return only the name of the coding language used, bolded in markdown, and one markdown code box with the extracted code. The markdown code box should be language ambiguious, denoted using only triple backticks."
+    instructions = "Please transcribe the content of this image into code. Return only the name of the coding language used (either C, Bash, Java, or Python), bolded in markdown, and one markdown code box with the extracted code. The markdown code box should be language ambiguious, denoted using only triple backticks. Fix any errors that are likely to be ambigious to a grader."
     if img_url:
         img_request = {"type": "image_url", "image_url": {"url": img_url}}
     elif img_base64:
