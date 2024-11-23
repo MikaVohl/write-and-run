@@ -39,9 +39,10 @@ def request_code(img_url=None, img_base64=None):
         },
         {
             "role": "user",
-            "content": [ img_request ]
+            "content": [img_request]
         }
     ]
+    print(messages)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
@@ -78,7 +79,7 @@ def request_code(img_url=None, img_base64=None):
         print("Error: No response received from the model.")
         sys.exit(1)
 
-def generate_tests(code, language):
+def generate_tests(code, language, context=None):
     # TODO: Include expected output in the test cases
     system_instruction = f"""
     You are an expert assistant for generating test cases for given input {language} code.
@@ -107,8 +108,6 @@ def generate_tests(code, language):
     6. Return the JSON as specified above.
     """
 
-    user_instruction = code
-
     messages = [
         {
             "role": "system",
@@ -117,10 +116,11 @@ def generate_tests(code, language):
         {
             "role": "user",
             "content": [
-                {"type": "text", "text": user_instruction},
+                {"type": "text", "text": f"User given context of the following code: \"{context}\"\ncode: {code}"} if context else {"type": "text", "text": code},
             ]
         }
     ]
+    print(messages)
 
     response = client.chat.completions.create(
         model="gpt-4o-mini",
