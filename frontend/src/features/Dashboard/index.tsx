@@ -57,7 +57,8 @@ const SessionDashboard = () => {
 
   // Effects
   useEffect(() => {
-    if (session?.code) {
+    if (session?.code && !editorCode) {
+        console.log('Setting editor code:', session.code);
       setEditorCode(session.code);
     }
   }, [session, setEditorCode]);
