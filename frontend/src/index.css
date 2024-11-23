@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --custom-bg-color: #101010;
+    --custom-panel-color: #222;
+    --custom-box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.8);
+    --custom-color: #fff;
+    --custom-color-brand: #24b47e;
+    --custom-color-secondary: #666;
+    --custom-border: 1px solid #333;
+    --custom-border-radius: 5px;
+    --custom-spacing: 5px;
+  }
+}
+
+@layer components {
+  .avatar {
+    @apply rounded-md overflow-hidden max-w-full;
+  }
+  
+  .avatar.image {
+    @apply object-cover;
+  }
+  
+  .avatar.no-image {
+    @apply bg-gray-300 border border-gray-200 rounded-md;
+  }
+
+  .footer {
+    @apply absolute max-w-full bottom-0 left-0 right-0 flex flex-row border-t border-gray-600 bg-gray-800;
+  }
+}
+
+/* Keep the spinner animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
