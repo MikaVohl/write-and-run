@@ -21,6 +21,7 @@ const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setIsLoading(true);
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
+            console.log(session);
             setUser(session?.user ?? null);
             setIsLoading(false);
         });

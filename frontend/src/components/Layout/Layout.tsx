@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { getNavigationItems } from '@/providers/Router';
@@ -18,6 +18,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
     const location = useLocation();
     const navItems = getNavigationItems();
+    const navigate = useNavigate();
 
     return (
         <div
@@ -76,12 +77,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 {/* User Profile Section */}
                 {user && (
                     <div className="p-3 bg-white border-t border-gray-200">
-                        <div className={cn(
+                        <div onClick={() => { navigate('./profile') }} className={cn(
                             "flex items-center gap-3 p-2 rounded-lg",
+                            "cursor-pointer",
                             "hover:bg-gray-100 transition-all duration-200",
                             !isSidebarExpanded && "justify-center"
                         )}>
-                            <div className="relative">
+                            <div className="relative ">
                                 <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center overflow-hidden">
                                     {user.user_metadata?.avatar_url ? (
                                         <img
