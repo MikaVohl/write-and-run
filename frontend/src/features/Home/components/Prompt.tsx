@@ -36,7 +36,7 @@ const Prompt = ({ onSubmit }: { onSubmit: (content: string) => void }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Write your prompt here..."
+            placeholder="Give some context here..."
             className="w-full min-h-[50px] max-h-[50px] p-3 text-gray-800 bg-gray-50 
                       rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500
                       focus:border-transparent outline-none resize-none
