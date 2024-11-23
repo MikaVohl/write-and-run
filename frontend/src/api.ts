@@ -1,8 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from './supabaseClient';
-import { Tables, TablesInsert } from './types/supabase';
+import { Database, Tables, TablesInsert } from './types/supabase';
 
-type UpdateSessionPayload = Partial<Omit<Tables<'sessions'>, 'id' | 'created_at'>>;
+type UpdateSessionInput = {
+    id: string;
+    detected_code?: string;
+    code?: string;
+    language?: string;
+    status?: string;
+};
+
 
 
 export const useSessions = () => {
@@ -35,35 +42,22 @@ export const useSession = (id: string) => {
         enabled: !!id,
     });
 };
+export const updateSession = async (updatedSession: UpdateSessionInput) => {
 
-export const useUpdateSession = (id: string) => {
-    const queryClient = useQueryClient();
-
-    return useMutation({
-        mutationFn: async (updates: UpdateSessionPayload) => {
-            const { data, error } = await supabase
-                .from('sessions')
-                .update(updates)
-                .eq('id', id)
-                .select()
-                .single();
-
-            if (error) throw error;
-            return data;
-        },
-        onSuccess: (updatedSession) => {
-            // Update individual session cache
-            queryClient.setQueryData(['sessions', id], updatedSession);
-
-            // Update sessions list cache
-            queryClient.setQueryData<Tables<'sessions'>[]>(['sessions'], (oldSessions) => {
-                if (!oldSessions) return [updatedSession];
-                return oldSessions.map((session) =>
-                    session.id === id ? updatedSession : session
-                );
-            });
-        },
-    });
+    console.log(updatedSession);
+    const { data, error } = await supabase
+        .from('sessions')
+        .update({
+            detected_code: updatedSession.detected_code,
+            code: updatedSession.code,
+            language: updatedSession.language as any,
+            status: updatedSession.status as any,
+        })
+        .eq('id', updatedSession.id!)
+        .select('*')
+        .single();
+    if (error) throw error;
+    return data;
 };
 
 
