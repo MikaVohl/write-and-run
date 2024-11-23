@@ -17,11 +17,12 @@ export const useImageProcessing = ({
     onUpdateSession
 }: UseImageProcessingProps) => {
     const [imageUrl, setImageUrl] = useState<string>("");
-
+    const apiUrl = import.meta.env.VITE_API_URL;
     const processImageMutation = useMutation({
         // TODO - Live URL
+
         mutationFn: async (imgUrl: string) => {
-            const response = await fetch('http://localhost:3000/api/imgtocode', {
+            const response = await fetch(apiUrl + 'imgtocode', {
                 method: 'POST',
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ img_url: imgUrl })
