@@ -3,15 +3,19 @@ from openai import OpenAI
 
 client = OpenAI()
 
-def request_code(image_url):
+def request_code(img_url=None, img_base64=None):
     instructions = "Please transcribe the content of this image into code. Return only the name of the coding language used, bolded in markdown, and one markdown code box with the extracted code. The markdown code box should be language ambiguious, denoted using only triple backticks."
-
+    if img_url:
+        img_request = {"type": "image_url", "image_url": {"url": img_url}}
+    elif img_base64:
+        img_request = {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_base64}"}}
+    
     messages = [
         {
             "role": "user",
             "content": [
                 {"type": "text", "text": instructions},
-                {"type": "image_url", "image_url": { "url":  image_url }}
+                img_request
             ]
         }
     ]
