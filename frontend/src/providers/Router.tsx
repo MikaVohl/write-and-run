@@ -69,10 +69,10 @@ export const Routes: Route[] = [
   },
   {
     name: "Tester",
-    path: "/tester",
+    path: "/tester?",
     href: "/tester",
     icon: Icons.literature,
-    component: <Tester />,
+    component: <Tester concept="Concept Clicked On" task="GPT Generated Task" />,
     showInNav: true,
   },
 ];
