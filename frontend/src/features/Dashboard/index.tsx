@@ -176,7 +176,7 @@ const SessionDashboard = () => {
                     <div className="flex items-center space-x-2">
                         <span className="text-sm text-gray-500">main.{session?.language?.toLowerCase() || 'c'}</span>
                     </div>
-                    <div style={{ width: '5%', padding: '20px' }}>
+                    <div style={{ width: '15%', padding: '20px' }}>
                         <Button
                             variant="outline"
                             onClick={handleRunClick}
