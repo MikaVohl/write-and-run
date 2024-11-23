@@ -32,15 +32,17 @@ def imgtocode():
     img_base64 = json.get('img_base64')
     
     if img_url:
-        code, language = request_code(img_url=img_url)
+        code, language, concept = request_code(img_url=img_url)
     elif img_base64:
-        code, language = request_code(img_base64=img_base64)
+        code, language, concept = request_code(img_base64=img_base64)
     else:
         return jsonify({'error': 'Invalid input'}), 400
     
+    print(concept)
     response = {
         'code': code,
         'language': language,
+        'concept': concept,
     }
     return jsonify(response), 201
 
