@@ -2,13 +2,16 @@ import React, { useRef, useState } from "react";
 import { Card } from "../../components/ui/card";
 import { useAuthContext } from "@/contexts/AuthContext";
 const Profile = () => {
-  {
-    /* <Card classNameName="bg-blue-100 w-1/2 h-1/2 p-4 rounded-lg hoverL:shadow-lg shadow-lg">
-        <h1 classNameName="text-xl font-bold text-blue-900">Profile</h1>
-        <p classNameName="text-blue-700">Info</p>
-      </Card> */
-  }
   const { user } = useAuthContext();
+  const parseDate = (fulldate: string) => {
+    const date = new Date(fulldate);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    return { year, month, day };
+  };
+  const { year, month, day } = parseDate(user!.created_at);
+
   return (
     <div className="px-4">
       <main className="px-4 py-16 sm:px-6 lg:flex-auto lg:px-0 lg:py-20">
@@ -42,7 +45,15 @@ const Profile = () => {
                   Date Created
                 </dt>
                 <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                  <div className="text-gray-900">Insert Date Here</div>
+                  <div className="text-gray-900">
+                    {year}-{month}-{day}
+                  </div>
+                  <button
+                    type="button"
+                    className="font-semibold px-3 text-indigo-600 hover:text-indigo-500"
+                  >
+                    Delete Account
+                  </button>
                 </dd>
               </div>
             </dl>
@@ -52,11 +63,5 @@ const Profile = () => {
     </div>
   );
 };
-/*  <button
-type="button"
-className="font-semibold text-indigo-600 hover:text-indigo-500"
->
-Update
-</button>
-*/
+
 export default Profile;
