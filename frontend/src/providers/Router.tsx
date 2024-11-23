@@ -65,7 +65,7 @@ export const Routes: Route[] = [
     href: "/profile",
     icon: Icons.user,
     component: <Profile />,
-    showInNav: true,
+    showInNav: false,
   },
   {
     name: "Tester",
