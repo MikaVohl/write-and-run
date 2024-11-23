@@ -34,6 +34,8 @@ export const useSession = (id: string) => {
     });
 };
 
+
+
 export const useSessionImage = (sessionId: string) => {
     return useQuery<Tables<'session_image'>>({
         queryKey: ['session_image', sessionId],
