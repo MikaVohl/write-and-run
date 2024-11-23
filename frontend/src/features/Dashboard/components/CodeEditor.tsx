@@ -19,7 +19,7 @@ export const CodeEditorSection = ({
     return (
         <div className="flex flex-col h-full">
             <div className="flex items-center justify-between px-4 py-2 border-b bg-white dark:bg-neutral-900">
-                <span className="text-sm text-neutral-500">main.{language.toLowerCase()}</span>
+                <span className="text-sm text-neutral-500">{language.toLowerCase()}</span>
                 <div className="flex gap-2">
                     <Button
                         onClick={onRun}
