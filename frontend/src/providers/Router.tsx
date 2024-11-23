@@ -10,7 +10,6 @@ import Sessions from "@/features/Sessions";
 
 const ProtectedRoute = () => {
     const { user, isLoading } = useAuthContext();
-    console.log(user);
     if (!user && !isLoading) {
         return <Navigate to="/login" replace />;
     }
