@@ -1,0 +1,16 @@
+**C++**
+
+```
+#include <cmath>
+#include <iostream>
+using namespace std;
+int main() {
+    int x, y;
+    cin >> x >> y;
+    z = pi * x * y / 10.0;
+    cout << "The Result is " << endl;
+    cout << Sin(x) << endl;
+    cout << Cos(y) << endl;
+    return 0;
+}
+```
