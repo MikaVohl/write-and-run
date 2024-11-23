@@ -1,47 +1,43 @@
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '@/supabaseClient';
+import { useState } from 'react';
 
-interface TestsGenerationParams {
+interface UseTestsGenerationProps {
     sessionId: string;
     apiUrl: string;
+    onSuccess: (code: string) => Promise<void>;
 }
 
-export function useTestsGeneration({ sessionId, apiUrl }: TestsGenerationParams) {
-    const updateSession = async (code: string) => {
-        const { error } = await supabase
-            .from('sessions')
-            .update({ code })
-            .eq('id', sessionId);
+export const useTestsGeneration = ({ sessionId, apiUrl, onSuccess }: UseTestsGenerationProps) => {
+    const [isGeneratingTests, setIsGeneratingTests] = useState(false);
+    const [testsError, setTestsError] = useState<Error | null>(null);
+    const isTestsError = !!testsError;
 
-        if (error) throw error;
-    };
+    const generateTests = async (code: string, language: string) => {
+        setIsGeneratingTests(true);
+        setTestsError(null);
 
-    const {
-        mutate: generateTests,
-        isLoading: isGeneratingTests,
-        error: testsError,
-        isError: isTestsError
-    } = useMutation({
-        mutationFn: async (code: string) => {
+        try {
             const response = await fetch(`${apiUrl}generatetests`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    code,
-                    language: 'python', // You might want to make this dynamic
+                    language,
+                    code
                 }),
             });
 
-            if (!response.ok) throw new Error('Failed to generate tests');
-            return response.json();
-        },
-        onSuccess: async (data) => {
-            await updateSession(data.code);
-        },
-        onError: (error) => {
-            console.error('Failed to generate tests:', error);
+            if (!response.ok) {
+                throw new Error('Failed to generate tests');
+            }
+
+            const data = await response.json();
+            await onSuccess(data.code);
+        } catch (error) {
+            setTestsError(error as Error);
+            console.error('Error generating tests:', error);
+        } finally {
+            setIsGeneratingTests(false);
         }
-    });
+    };
 
     return {
         generateTests,
@@ -49,4 +45,4 @@ export function useTestsGeneration({ sessionId, apiUrl }: TestsGenerationParams)
         testsError,
         isTestsError
     };
-}
+};
