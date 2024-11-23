@@ -43,6 +43,7 @@ export const useImageProcessing = ({
                         code: data.code,
                         detected_code: data.code,
                         language: detectedLanguage,
+                        concept: data.concept,
                         status: 'completed'
                     })
                     .eq('id', session!.id);
