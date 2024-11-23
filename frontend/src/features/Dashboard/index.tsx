@@ -53,7 +53,7 @@ const SessionDashboard = () => {
   const handleRunClick = () => {
     compile({
       code: editorCode,
-      language: session?.language || Language.Python
+      language: session?.language || Language.python
     });
   };
 
