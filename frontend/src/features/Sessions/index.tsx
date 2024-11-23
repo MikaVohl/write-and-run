@@ -16,7 +16,6 @@ import { useSessions } from '@/api';
 const Sessions = () => {
     const navigate = useNavigate();
     const { data, isLoading } = useSessions();
-    console.log(data);
     if (isLoading) {
         return (
             <></>

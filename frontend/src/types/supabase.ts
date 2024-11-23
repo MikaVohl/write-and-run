@@ -134,7 +134,7 @@ export type Database = {
     }
     Enums: {
       language_enum: "C" | "Bash" | "Java" | "Python"
-      session_status: "pending" | "completed"
+      session_status: "pending" | "completed" | "failed"
     }
     CompositeTypes: {
       [_ in never]: never
