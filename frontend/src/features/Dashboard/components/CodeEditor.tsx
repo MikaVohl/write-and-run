@@ -42,6 +42,7 @@ export const CodeEditorSection = ({
                         onClick={makeTests}
                         variant="outline"
                         size="sm"
+                        disabled={isCompiling}
                     >
                         Generate Tests
                     </Button>
