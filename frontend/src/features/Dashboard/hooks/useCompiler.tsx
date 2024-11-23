@@ -40,11 +40,7 @@ export const useCompiler = () => {
                 console.log("TEST");
                 setCompilerOutput(data.error!);
             } 
-            else {
-                const commaIndex = data.stderr.indexOf(",");
-                const rest = commaIndex !== -1 ? data.stderr.substring(commaIndex + 1).trim() : "";
-                setCompilerOutput(rest.trim() || "Compilation error occurred");
-            }
+ 
         },
         onError: (error) => {
             console.error('Error compiling code:', error);
