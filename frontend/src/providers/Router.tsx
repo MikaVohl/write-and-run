@@ -8,6 +8,7 @@ import Profile from "@/features/Profile";
 import SessionDashboard from "@/features/Dashboard";
 import Sessions from "@/features/Sessions";
 import Tester from "@/features/TestMe";
+import LoadingAnimation from "@/components/LoadingAnimation"
 
 const ProtectedRoute = () => {
   const { user, isLoading } = useAuthContext();
@@ -67,6 +68,15 @@ export const Routes: Route[] = [
     component: <Profile />,
     showInNav: false,
   },
+  {
+    name: "Running",
+    path: "/LoadingAnimation",
+    href: "/LoadingAnimation",
+    icon: Icons.user,
+    component: <LoadingAnimation />,
+    showInNav: true,
+  },
+
   /*{
     name: "Tester",
     path: "/tester?",
