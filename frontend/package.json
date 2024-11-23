@@ -15,6 +15,7 @@
         "@heroicons/react": "^2.1.5",
         "@hookform/resolvers": "^3.9.0",
         "@lottiefiles/dotlottie-react": "^0.10.0",
+        "@lottiefiles/react-lottie-player": "^3.5.4",
         "@monaco-editor/react": "^4.6.0",
         "@radix-ui/react-avatar": "^1.1.1",
         "@radix-ui/react-checkbox": "^1.1.2",
