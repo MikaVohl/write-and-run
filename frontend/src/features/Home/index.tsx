@@ -11,7 +11,7 @@ const Home = () => {
           </div>
         </div>
         <div className="flex flex-row px-8 space-y-10 justify-center">
-          <Card className="w-full h-64"></Card>
+          <Card className="w-full h-[600px]"></Card>
         </div>
       </div>
     </div>
