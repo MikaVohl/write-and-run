@@ -143,6 +143,7 @@ const SessionDashboard = () => {
               problemStatement={"MOCK DATA"}
               code={localCode}
               language={session?.language as Language}
+              prompt={session?.prompt as string}
             />
           </div>
         </div>
