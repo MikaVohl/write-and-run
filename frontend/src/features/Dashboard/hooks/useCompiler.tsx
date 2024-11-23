@@ -15,10 +15,11 @@ export const useCompiler = () => {
     const [compilerOutput, setCompilerOutput] = useState<string>("");
     const [isCompiling, setIsCompiling] = useState<boolean>(false);
     const [isCompilerExpanded, setIsCompilerExpanded] = useState(true);
+    const apiUrl = import.meta.env.VITE_API_URL;
 
     const compileMutation = useMutation({
         mutationFn: async ({ code, language }: CompileInput) => {
-            const response = await fetch('http://127.0.0.1:5001/api/compile', {
+            const response = await fetch(apiUrl + 'compile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ code, language })
