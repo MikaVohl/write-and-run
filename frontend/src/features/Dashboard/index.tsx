@@ -36,7 +36,7 @@ const SessionDashboard = () => {
     useEffect(() => {
         const getSignedUrl = async () => {
             if (sessionImage && session?.user_id) {
-                const filePath = `${session.user_id}/${sessionImage.id}.png`;
+                const filePath = `${session.user_id}/${sessionImage.id}.${sessionImage.ext}`;
 
                 const { data, error } = await supabase
                     .storage
