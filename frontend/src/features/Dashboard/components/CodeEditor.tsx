@@ -1,25 +1,35 @@
 import { Button } from '@/components/ui/button';
 import CodeEditor from '@/components/CodeEditor/CodeEditor';
+import LanguageDropdown from './LanguageDropdown';
+import { Language } from './LanguageDropdown';
+
 
 interface CodeEditorSectionProps {
     language: string;
     code: string;
     isCompiling: boolean;
+    handleLanguageSelect: (language: Language) => void;
     onCodeChange: (code: string) => void;
+    onLanguageChange: (language: Language) => void;
     onRun: () => void;
 }
+
 
 export const CodeEditorSection = ({
     language,
     code,
+    handleLanguageSelect,
     isCompiling,
     onCodeChange,
+    onLanguageChange,
     onRun
 }: CodeEditorSectionProps) => {
+
+    
     return (
         <div className="flex flex-col h-full">
             <div className="flex items-center justify-between px-4 py-2 border-b bg-white dark:bg-neutral-900">
-                <span className="text-sm text-neutral-500">{language.toLowerCase()}</span>
+                <LanguageDropdown language={language} onSelect={handleLanguageSelect}/>
                 <div className="flex gap-2">
                     <Button
                         onClick={onRun}
