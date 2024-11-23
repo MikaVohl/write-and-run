@@ -40,17 +40,24 @@ const SessionDashboard = () => {
 
                 // console.log(JSON.stringify({ img_url: data!.signedUrl + '.png' }));
                 if (session?.detected_code == null) {
-                    fetch('http://localhost:5001/api/imgtocode', {
-                        method: 'POST', body: JSON.stringify({ img_url: data!.signedUrl + sessionImage.ext  }), headers: {
+                    fetch('http://localhost:3000/api/imgtocode', {
+                        method: 'POST', body: JSON.stringify({ img_url: data!.signedUrl }), headers: {
                             "Content-Type": "application/json",
-                            mode: 'no-cors',
 
                         }
                     }).then((response) => {
-                        console.log(response);
-                        console.log(JSON.parse(response.body as any));
-                        setEditorCode((response as any)['code']);
-                    });
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json(); // Parse the response as JSON
+                    })
+                        .then((data) => {
+                            console.log(data); // Response JSON
+
+                            // Update DB
+                            
+                            setEditorCode(data.code); // Use the 'code' field from the response
+                        })
                 }
 
                 if (error) {
