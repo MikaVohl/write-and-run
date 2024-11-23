@@ -22,6 +22,7 @@ const SessionDashboard = () => {
   const { sessionId } = useParams<{ sessionId: string }>();
   const { data: session, isLoading: isSessionLoading } = useSession(sessionId!);
   const { data: sessionImage, isLoading: isImageLoading } = useSessionImage(sessionId!);
+  const [language, setLanguage] = useState<string>("");
 
   const [editorCode, setEditorCode] = useState<string>("");
   const [compilerOutput, setCompilerOutput] = useState<string>("");
@@ -51,6 +52,7 @@ const SessionDashboard = () => {
     if (session?.compilation_output) {
       setCompilerOutput(session.compilation_output);
     }
+
   }, [session]);
 
   useEffect(() => {
@@ -95,6 +97,7 @@ const SessionDashboard = () => {
         const data = await response.json();
         await updateSessionMutation.mutateAsync(data.code);
         setEditorCode(data.code);
+        setLanguage(data.language);
       } catch (error) {
         console.error('Error processing image:', error);
       }
@@ -105,6 +108,7 @@ const SessionDashboard = () => {
 
   const handleRunClick = async () => {
     setIsCompiling(true);
+    console.log(language);
     try {
       const response = await fetch('http://127.0.0.1:5001/api/compile', {
         method: 'POST',
@@ -113,7 +117,7 @@ const SessionDashboard = () => {
         },
         body: JSON.stringify({
           code: editorCode,
-          language: session?.language || 'python',
+          language:  language.toLowerCase(),
         }),
       });
 
@@ -157,7 +161,7 @@ const SessionDashboard = () => {
 
         <div className="h-full overflow-hidden">
           <CodeEditorSection
-            language={session?.language?.toLowerCase() || 'python'}
+            language={language || 'Upload to detect language'}
             code={editorCode}
             isCompiling={isCompiling}
             onCodeChange={setEditorCode}
