@@ -54,7 +54,7 @@ const useCodeMetrics = (code: string = '') => {
     }, [code]);
 };
 
-export const CodeAnalysis = ({ code = '', language = '' , analysis = ""}: CodeAnalysisProps) => {
+export const CodeAnalysis = ({ code = '', language = '' , analysis}: CodeAnalysisProps) => {
     const stats = useCodeMetrics(code);
 
     const metrics: MetricItem[] = [
@@ -67,9 +67,12 @@ export const CodeAnalysis = ({ code = '', language = '' , analysis = ""}: CodeAn
     ];
 
     return (
+        <div>
+        <h2 className="text-2xl font-bold  p-6  font-medium">Code Analysis</h2>
+        <div  className="gap-4 p-6  font-medium">{analysis}</div>
         
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 p-6">
-            {analysis}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 p-6 ">
+
             {metrics.map((metric, index) => (
                 <Card key={index} className="bg-white dark:bg-neutral-900">
                     <CardContent className="pt-6">
@@ -83,6 +86,8 @@ export const CodeAnalysis = ({ code = '', language = '' , analysis = ""}: CodeAn
                     </CardContent>
                 </Card>
             ))}
+
+        </div>
 
         </div>
     );
