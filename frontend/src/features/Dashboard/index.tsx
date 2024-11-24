@@ -13,23 +13,16 @@ import { useTestsGeneration } from "./hooks/useTestGeneration";
 import { useEffect, useState } from "react";
 import { Language } from "@/types/types";
 import LoadingAnimation from "@/components/LoadingAnimation";
-import ErrorDialog from "./components/ErrorDialog";
 import { useNavigate } from 'react-router-dom';
+import { useErrorToast } from "@/components/ErrorToast";
 
 const SessionDashboard = () => {
-
   const { sessionId } = useParams<{ sessionId: string }>();
   const navigate = useNavigate();
-  // Check is valid UUI ID
-
-  // If Session does not exist, navigate back to home page
-
   const apiUrl = import.meta.env.VITE_API_URL;
   const queryClient = useQueryClient();
   const [localCode, setLocalCode] = useState<string>('');
-  const [open, setOpen] = useState<boolean>(false);
-  const [reason, setReason] = useState<string>('');
-
+  const { showError } = useErrorToast();
 
   // Session and Image Queries
   const {
@@ -67,9 +60,8 @@ const SessionDashboard = () => {
     sessionId: sessionId!,
     apiUrl,
     onSuccess: async (newCode: string, reason: string) => {
-      if (newCode == ''){ 
-        setOpen(true);
-        setReason(reason);
+      if (newCode === '') {
+        showError(reason);
         return;
       }
       await updateCode(newCode);
@@ -109,16 +101,14 @@ const SessionDashboard = () => {
   };
 
   useEffect(() => {
-
-      // If session is not loading and session is null, navigate to home
     if (!isSessionLoading && !session) {
       navigate('/home');
     }
-   
+
     if (session?.code) {
       setLocalCode(session.code);
     }
-  }, [session?.code, isSessionLoading ]);
+  }, [session?.code, isSessionLoading]);
 
   const handleCodeChange = (newCode: string) => {
     setLocalCode(newCode);
@@ -169,13 +159,7 @@ const SessionDashboard = () => {
             status={session?.status!}
           />
         </div>
-        <ErrorDialog
-        open={open}
-        setOpen={setOpen}
-        errorMessage={reason}
-      />
 
-        {/* Right Panel - Code Editor */}
         <div className="h-full col-span-6 overflow-hidden flex flex-col">
           <div className="relative flex-1 min-h-0">
             {showProcessingOverlay && (

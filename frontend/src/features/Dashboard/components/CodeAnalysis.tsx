@@ -28,7 +28,7 @@ export const CodeAnalysis = ({ code = '', language = '', analysis }: CodeAnalysi
     if (!stats) {
         return null;
     }
-    
+
     const metrics: MetricItem[] = [
         { icon: FileCode, label: "Total Lines", value: stats.totalLines },
         { icon: Code, label: "Code Lines", value: stats.codeLines },
@@ -40,7 +40,7 @@ export const CodeAnalysis = ({ code = '', language = '', analysis }: CodeAnalysi
 
     return (
         <div>
-            <h2 className="text-2xl font-bold  p-6  font-medium">Code Analysis</h2>
+            <h2 className="text-2xl font-bold p-6">Code Analysis</h2>
             <div className="gap-4 p-6  font-medium">{analysis}</div>
 
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 p-6 ">
