@@ -21,10 +21,23 @@ interface TabViewProps {
     prompt?: string;
     className?: string;
     analysis?: string;
+    status?: string;
 }
 
-export const TabView = ({ imageUrl, code, language, prompt, className, analysis }: TabViewProps) => {
+export const TabView = ({ imageUrl, code, language, prompt, className, analysis, status }: TabViewProps) => {
     const [zoom, setZoom] = useState(1);
+
+
+    const getStatusColor = (status: string) => {
+        switch (status) {
+            case 'completed':
+                return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
+            case 'pending':
+                return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20';
+            default:
+                return 'text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-900/20';
+        }
+    };
 
     return (
         <Tabs defaultValue="document" className={cn("flex flex-col h-full overflow-hidden", className)}>
@@ -59,7 +72,17 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis 
                         <BarChart className="h-5 w-5" />
                         Code Analysis
                     </TabsTrigger>
+
                 </TabsList>
+                {/* Status Text on the left */}
+                {status && (
+                    <div className="px-2">
+
+                        <div className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(status)}`}>
+                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                        </div>
+                    </div>
+                )}
                 {/* <ZoomControls zoom={zoom} setZoom={setZoom} /> */}
             </div>
 

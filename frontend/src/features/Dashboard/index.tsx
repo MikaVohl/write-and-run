@@ -168,6 +168,7 @@ const SessionDashboard = () => {
             language={session?.language as Language}
             prompt={session?.prompt!}
             analysis={session?.analysis!}
+            status={session?.status!}
           />
         </div>
         <ErrorDialog
