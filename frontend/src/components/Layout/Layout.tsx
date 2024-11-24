@@ -26,7 +26,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       className="flex h-screen overflow-hidden bg-white"
       style={
         {
-          "--sidebar-width": isSidebarExpanded ? "280px" : "64px",
+          "--sidebar-width": isSidebarExpanded ? "230px" : "64px",
         } as React.CSSProperties
       }
     >
@@ -36,11 +36,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           "transition-all duration-200",
           "border-r border-gray-200",
           "flex flex-col",
-          isSidebarExpanded ? "w-[280px]" : "w-16"
+          isSidebarExpanded ? "w-[230px]" : "w-16"
         )}
       >
         {/* Sidebar Header */}
-        <div className="flex items-center min-h-[3.5rem] px-6 gap-2 bg-white border-b border-gray-200">
+        <div className="flex items-center min-h-[3.5rem] px-3 gap-2 bg-white border-b border-gray-200">
           {isSidebarExpanded && (
             <div className="flex items-center flex-1 min-w-0">
               <Link to="/" className="flex items-center gap-2 text-gray-900">
@@ -77,12 +77,12 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
         {/* User Profile Section */}
         {user && (
-          <div className="p-3 bg-white border-t border-gray-200">
+          <div className="p-2 py-3 bg-white border-t border-gray-200">
             <div className="flex items-center gap-3">
               <div
                 onClick={() => navigate("./profile")}
                 className={cn(
-                  "flex items-center gap-3 p-2 rounded-lg flex-1",
+                  "flex items-center gap-2 p-2 rounded-lg flex-1",
                   "cursor-pointer",
                   "hover:bg-gray-100 transition-all duration-200",
                   !isSidebarExpanded && "justify-center"
