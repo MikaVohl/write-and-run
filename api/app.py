@@ -3,6 +3,7 @@ from llm import request_code, generate_tests
 from flask_cors import CORS
 from compile import compile_and_run
 from functools import wraps
+import os
 
 app = Flask(__name__)
 
@@ -91,4 +92,5 @@ def method_not_allowed(_):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=True)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
