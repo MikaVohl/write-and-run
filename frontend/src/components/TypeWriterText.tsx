@@ -18,7 +18,7 @@ const TypewriterText = () => {
             } else {
                 onComplete();
             }
-        }, 150);
+        }, 200);
     };
 
     useEffect(() => {
@@ -28,7 +28,7 @@ const TypewriterText = () => {
                 clearInterval(writeInterval);
                 setIsWriteComplete(true);
             });
-        }, 800); // 800ms delay before starting
+        }, 50); // 50ms delay before starting
 
         return () => clearTimeout(initialDelay);
     }, []); // Run only once on mount
