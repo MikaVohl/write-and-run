@@ -1,4 +1,6 @@
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { Loader2 } from "lucide-react";
 
 interface ImageViewerProps {
     imageUrl: string;
@@ -6,27 +8,35 @@ interface ImageViewerProps {
     className?: string;
 }
 
+
 export const ImageViewer = ({ imageUrl, zoom, className }: ImageViewerProps) => {
+    const [isLoading, setIsLoading] = useState(true);
+
     return (
         <div className={cn(
-            "w-full h-full bg-gray-50 overflow-auto",
+            "w-full h-full bg-gray-50",
             className
         )}>
-            <div className="min-h-full w-full flex items-center justify-center p-4">
-                <div className="relative transition-transform duration-200 ease-out">
-                    <img
-                        src={imageUrl}
-                        alt="Document Image"
-                        className="max-w-none object-contain rounded-lg shadow-lg"
-                        style={{
-                            transform: `scale(${zoom})`,
-                            transformOrigin: 'center center',
-                            maxHeight: zoom === 1 ? 'calc(100vh - 16rem)' : 'none',
-                            maxWidth: zoom === 1 ? '100%' : 'none'
-                        }}
-                        loading="lazy"
-                    />
-                </div>
+            <div className="h-full w-full flex items-center justify-center">
+                {isLoading && (
+                    <div className="flex flex-col items-center gap-2">
+                        <Loader2 className="w-6 h-6 text-indigo-600 animate-spin" />
+                        <p className="text-sm text-gray-500">Loading document...</p>
+                    </div>
+                )}
+                <img
+                    src={imageUrl}
+                    alt="Document Image"
+                    className={cn(
+                        "max-w-full h-auto object-contain rounded-lg",
+                        isLoading ? "hidden" : "block"
+                    )}
+                    style={{
+                        transform: `scale(${zoom})`,
+                        transformOrigin: 'center center'
+                    }}
+                    onLoad={() => setIsLoading(false)}
+                />
             </div>
         </div>
     );
