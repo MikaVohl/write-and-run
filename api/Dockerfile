@@ -1,16 +1,14 @@
-FROM python:3.8-alpine
-
+FROM python:3.8-slim-buster
 # Set working directory
 WORKDIR /app
 
 # Installs gcc and other compile dependencies
-# RUN apt-get update && \
-#     apt-get install -y \
-#     gcc \
-#     default-jdk \
-#     && apt-get clean \
-#     && rm -rf /var/lib/apt/lists/*
-RUN apk add --no-cache gcc musl-dev libffi-dev openjdk8
+RUN apt-get update && \
+    apt-get install -y \
+    gcc \
+    default-jdk \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 
 # Copy only requirements first to leverage Docker cache

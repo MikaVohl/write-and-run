@@ -7,12 +7,16 @@ import os
 
 app = Flask(__name__)
 
-CORS(app, 
-     resources={r"/*": {
-        "origins": "*",
-        "methods": ["OPTIONS", "POST", "GET"],
+CORS(app, resources={
+    r"/*": {
+        "origins": [
+            "https://write-and-run.vercel.app",
+            "http://localhost:3000"  
+        ],
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"]
-     }})
+    }
+})
 
 def require_json(f):
     @wraps(f)
