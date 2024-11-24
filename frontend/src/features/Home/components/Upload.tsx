@@ -274,7 +274,7 @@ const UploadComponent = () => {
             <p className="text-xl font-medium">
               Drop your code image here or click to upload
             </p>
-            <p className="text-sm text-gray-500 mt-2">PNG, JPG • Max 10MB</p>
+            <p className="text-sm text-gray-500 mt-2">PNG, JPG, JPEG • Max 10MB</p>
           </div>
           {isDragging && (
             <div className="absolute inset-0 bg-blue-500/10 backdrop-blur-sm animate-pulse" />

@@ -94,7 +94,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                         <div className="flex-none bg-white border-b border-gray-200">
                             <div className="max-w-3xl mx-auto px-4 py-4">
                                 <div className="flex items-center gap-2 mb-2">
-                                    <h2 className="text-sm font-medium text-gray-500">Prompt</h2>
+                                    <h2 className="text-sm font-medium text-gray-500">User Context</h2>
                                 </div>
                                 <p className="text-lg text-gray-800 leading-relaxed">{prompt}</p>
                             </div>
