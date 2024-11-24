@@ -13,6 +13,9 @@ export default {
         sm: 'calc(var(--radius) - 4px)'
       },
       colors: {},
+      fontFamily: {
+        'dancing-script': ['"Dancing Script"', 'cursive'],
+      },
       keyframes: {
         'bounce-horizontal': {
           '0%': {
@@ -59,6 +62,9 @@ export default {
             opacity: '1',
           },
         },
+      },
+      boxShadow: {
+        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
       },
       animation: {
         'bounce-horizontal': 'bounce-horizontal 8s ease-in-out infinite',

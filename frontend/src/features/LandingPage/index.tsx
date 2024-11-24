@@ -1,3 +1,4 @@
+import TypewriterText from "@/components/TypeWriterText";
 export default function Example() {
   return (
     <div className="bg-white overflow-clip h-screen">
@@ -7,13 +8,15 @@ export default function Example() {
           aria-label="Global"
           className="flex items-center justify-between p-6 lg:px-8"
         >
-          <div className="flex lg:flex-1 p">
+          <div className="flex lg:flex-1">
+            <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Write and Run</span>
               <img
                 src="/src/assets/Logo/W&RLogo.png"
                 alt=""
                 className="h-12 w-auto"
               />
+            </a>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <a href="/home" className="text-sm/6 font-semibold text-gray-900">
@@ -22,7 +25,6 @@ export default function Example() {
           </div>
         </nav>
       </header>
-
       <main className="isolate">
         <div className="relative pt-1">
           <div
@@ -32,9 +34,7 @@ export default function Example() {
           <div className="py-24 sm:py-32 lg:pb-40">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
-                  Write and Run
-                </h1>
+                <TypewriterText />
                 <p className="mt-5 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                   Upload your handwritten code and run it in your browser with
                   ease
@@ -49,12 +49,13 @@ export default function Example() {
                 </div>
               </div>
               <div className="mt-16 flow-root sm:mt-12">
-                <div className="rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <div className="relative rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                   <img
                     src="/src/assets/Images/ShowcaseImage.jpeg"
+                    alt="App screenshot"
                     width={2432}
                     height={1442}
-                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10 scale-110 translate-y-1/3"
                   />
                 </div>
               </div>
