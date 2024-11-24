@@ -27,9 +27,7 @@ const Sessions = () => {
     const [selectedLanguage, setSelectedLanguage] = useState<string>('all');
 
     if (isLoading) {
-        return (
-            <></>
-        );
+        return <></>;
     }
 
     const sessions = data || [];
@@ -39,7 +37,6 @@ const Sessions = () => {
         ? sessions
         : sessions.filter(session => session.language?.toLowerCase() === selectedLanguage.toLowerCase());
 
-    
     const capFirst = (string: string) => {
         if (!string) return string;
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -49,11 +46,7 @@ const Sessions = () => {
         try {
             const utcDate = new Date(dateString + 'Z');
             const localDate = new Date(utcDate.getTime());
-    
-            // Format the date and shorten it
             const distance = formatDistanceToNow(localDate, { addSuffix: true });
-    
-            // Shorten the distance string for minutes and seconds
             return distance.replace(/minute(s)?/, 'mins').replace(/second(s)?/, 'sec').replace(/hour(s)?/, 'hr').replace(/day(s)?/, 'd');
         } catch (error) {
             console.error('Error parsing date:', error);
@@ -73,9 +66,9 @@ const Sessions = () => {
     };
 
     return (
-        <div className="p-4">
-            <Card>
-                <CardHeader>
+        <div className="h-screen p-4">
+            <Card className="h-full flex flex-col">
+                <CardHeader className="flex-none">
                     <div className="flex items-center justify-between">
                         <div>
                             <CardTitle>Recent Sessions</CardTitle>
@@ -92,68 +85,75 @@ const Sessions = () => {
                         </Button>
                     </div>
                 </CardHeader>
-                <CardContent>
-                    <Table>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Date</TableHead>
-                                <TableHead>
-                                    <Select
-                                        value={selectedLanguage}
-                                        onValueChange={setSelectedLanguage}
-                                    >
-                                        <SelectTrigger className="p-0 h-auto text-sm font-medium text-muted-foreground border-0 hover:no-underline focus:ring-0 focus:ring-offset-0">
-                                            {capFirst(selectedLanguage)} 
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="Languages">Languages</SelectItem>
-                                            {languages.map((lang) => (
-                                                <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
-                                                    {capFirst(lang)}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </TableHead>
-                                <TableHead>Status</TableHead>
-                                <TableHead>Summary</TableHead>
-                            </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                            {filteredSessions.map((session) => (
-                                <TableRow
-                                    key={session.id}
-                                    className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
-                                    onClick={() => navigate(`/sessions/${session.id}`)}
-                                >
-                                    <TableCell className="font-medium">
-                                        {session.created_at && formatDate(session.created_at)}
-                                    </TableCell>
-                                    <TableCell>{session.language != null && capFirst(session.language) }</TableCell>
-                                    <TableCell>
-                                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
-                                            {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
-                                        </span>
-                                    </TableCell>
-                                    <TableCell>
-                                        <span className={`inline-flex items-center px-2 py-1`}>
-                                            {session.summary}
-                                        </span>
-                                    </TableCell>
-        
-                                </TableRow>
-                            ))}
-                            {filteredSessions.length === 0 && (
-                                <TableRow>
-                                    <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                                        {selectedLanguage === 'all' 
-                                            ? "No sessions found. Create a new session to get started."
-                                            : `No ${selectedLanguage} sessions found.`}
-                                    </TableCell>
-                                </TableRow>
-                            )}
-                        </TableBody>
-                    </Table>
+                <CardContent className="flex-1 flex flex-col min-h-0">
+                    <div className="flex-1 flex flex-col min-h-0">
+                        <div className="w-full">
+                            <Table>
+                                <TableHeader className="bg-white dark:bg-black">
+                                    <TableRow>
+                                        <TableHead>Date</TableHead>
+                                        <TableHead>
+                                            <Select
+                                                value={selectedLanguage}
+                                                onValueChange={setSelectedLanguage}
+                                            >
+                                                <SelectTrigger className="p-0 h-auto text-sm font-medium text-muted-foreground border-0 hover:no-underline focus:ring-0 focus:ring-offset-0">
+                                                    {capFirst(selectedLanguage)} 
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    <SelectItem value="all">All Languages</SelectItem>
+                                                    {languages.map((lang) => (
+                                                        <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
+                                                            {capFirst(lang)}
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                        </TableHead>
+                                        <TableHead>Status</TableHead>
+                                        <TableHead>Summary</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                            </Table>
+                        </div>
+                        <div className="flex-1 overflow-auto">
+                            <Table>
+                                <TableBody>
+                                    {filteredSessions.map((session) => (
+                                        <TableRow
+                                            key={session.id}
+                                            className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
+                                            onClick={() => navigate(`/sessions/${session.id}`)}
+                                        >
+                                            <TableCell className="font-medium">
+                                                {session.created_at && formatDate(session.created_at)}
+                                            </TableCell>
+                                            <TableCell>{session.language != null && capFirst(session.language)}</TableCell>
+                                            <TableCell>
+                                                <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
+                                                    {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
+                                                </span>
+                                            </TableCell>
+                                            <TableCell>
+                                                <span className="inline-flex items-center px-2 py-1">
+                                                    {session.summary}
+                                                </span>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                    {filteredSessions.length === 0 && (
+                                        <TableRow>
+                                            <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
+                                                {selectedLanguage === 'all' 
+                                                    ? "No sessions found. Create a new session to get started."
+                                                    : `No ${selectedLanguage} sessions found.`}
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    </div>
                 </CardContent>
             </Card>
         </div>
