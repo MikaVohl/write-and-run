@@ -2,7 +2,6 @@ import TypewriterText from "@/components/TypeWriterText";
 export default function Example() {
   return (
     <div className="bg-white overflow-clip h-screen">
-      {/* Header */}
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
           aria-label="Global"
