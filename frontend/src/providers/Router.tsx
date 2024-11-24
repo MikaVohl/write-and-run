@@ -9,6 +9,7 @@ import SessionDashboard from "@/features/Dashboard";
 import Sessions from "@/features/Sessions";
 import Tester from "@/features/TestMe";
 import LoadingAnimation from "@/components/LoadingAnimation"
+import LandingPage from "@/features/LandingPage";
 
 const ProtectedRoute = () => {
   const { user, isLoading } = useAuthContext();
@@ -39,8 +40,8 @@ interface Route {
 export const Routes: Route[] = [
   {
     name: "Home",
-    path: "/",
-    href: "/",
+    path: "/home",
+    href: "/home",
     component: <Home />,
     icon: Icons.home,
     showInNav: true,
@@ -75,6 +76,14 @@ export const getNavigationItems = () =>
 
 const router = createBrowserRouter([
   {
+    path: '/',
+    element: <LandingPage />
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
     path: "/",
     element: <ProtectedRoute />,
     children: [
@@ -83,10 +92,6 @@ const router = createBrowserRouter([
         element: route.component,
       })),
     ],
-  },
-  {
-    path: "/login",
-    element: <Login />,
   },
   {
     path: "*",

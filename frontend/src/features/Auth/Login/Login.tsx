@@ -15,7 +15,7 @@ function Login() {
             setIsLoading(true);
             
             // Get the current URL origin for the redirect
-            const redirectTo = `${window.location.origin}`;
+            const redirectTo = `${window.location.origin}/home`;
             
             const { data, error } = await supabase.auth.signInWithOAuth({
                 provider: 'google',
