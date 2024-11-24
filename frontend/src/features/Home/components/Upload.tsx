@@ -2,7 +2,7 @@ import { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Progress } from "@radix-ui/react-progress";
-import { CheckCircle2, Upload } from "lucide-react";
+import { CheckCircle2, Upload, X } from "lucide-react";
 import { supabase } from "@/supabaseClient";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -199,9 +199,10 @@ const UploadComponent = () => {
                     setImagePreview("");
                     setFile(null);
                   }}
-                  className="absolute top-4 right-4 text-gray-600 hover:text-red-500 bg-white rounded-full p-2"
+                  className="absolute top-4 right-4 p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200 group"
+                  aria-label="Delete image"
                 >
-                  X
+                  <X className="w-5 h-5 text-gray-500 dark:text-gray-400 group-hover:text-red-500 dark:group-hover:text-red-400 transition-colors duration-200" />
                 </button>
               </div>
             </div>
@@ -253,11 +254,10 @@ const UploadComponent = () => {
           className={`
                     relative overflow-hidden
                     border-2 border-dashed rounded-lg p-12 py-40
-                    ${
-                      isDragging
-                        ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20"
-                        : "border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:bg-blue-950/20"
-                    }
+                    ${isDragging
+              ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20"
+              : "border-gray-300 hover:border-blue-500 hover:bg-blue-50 dark:border-gray-700 dark:hover:bg-blue-950/20"
+            }
                     transition-all duration-300 ease-in-out
                     cursor-pointer
                 `}
