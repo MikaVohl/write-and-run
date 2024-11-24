@@ -30,7 +30,7 @@ export const CompilerOutput = ({ output, isExpanded, onToggle }: CompilerOutputP
                         }
                     </Button>
                     <span className="text-sm font-medium text-neutral-600">
-                        Compiler output
+                        Output
                     </span>
                 </div>
             </div>
