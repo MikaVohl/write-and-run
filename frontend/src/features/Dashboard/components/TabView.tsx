@@ -84,7 +84,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                         </div>
                     </div>
                 )}
-                {/* <ZoomControls zoom={zoom} setZoom={setZoom} /> */}
+                <ZoomControls zoom={zoom} setZoom={setZoom} />
             </div>
 
             {/* Content */}
