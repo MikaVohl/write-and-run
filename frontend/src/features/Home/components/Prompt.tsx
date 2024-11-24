@@ -7,7 +7,6 @@ const Prompt = ({ onSubmit }: { onSubmit: (content: string) => void }) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleSubmit = async () => {
-    if (!content.trim()) return;
 
     setIsLoading(true);
 
@@ -36,7 +35,7 @@ const Prompt = ({ onSubmit }: { onSubmit: (content: string) => void }) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Give some context here..."
+            placeholder="Give some optional context here..."
             className="w-full min-h-[50px] max-h-[50px] p-3 text-gray-800 bg-gray-50 
                       rounded-full border border-gray-300 focus:ring-2 focus:ring-blue-500
                       focus:border-transparent outline-none resize-none
@@ -45,7 +44,7 @@ const Prompt = ({ onSubmit }: { onSubmit: (content: string) => void }) => {
           />
           <button
             onClick={handleSubmit}
-            disabled={isLoading || !content.trim()}
+            disabled={isLoading}
             className="absolute right-2 top-1/2 transform -translate-y-1/2 
                        w-8 h-8 flex items-center justify-center
                        rounded-lg text-gray-400 hover:text-blue-500 
