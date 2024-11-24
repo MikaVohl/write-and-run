@@ -9,7 +9,6 @@ import { useCompiler } from "./hooks/useCompiler";
 import { useImageProcessing } from "./hooks/useImageProcessing";
 import { LanguageDrop } from "./components/LanguageDropdown";
 import { supabase } from '@/supabaseClient';
-import { Loader2 } from "lucide-react";
 import { useTestsGeneration } from "./hooks/useTestGeneration";
 import { useEffect, useState } from "react";
 import { Language } from "@/types/types";
