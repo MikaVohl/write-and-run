@@ -23,7 +23,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
   return (
     <div
-      className="flex h-screen bg-white"
+      className="flex h-screen overflow-hidden bg-white"
       style={
         {
           "--sidebar-width": isSidebarExpanded ? "280px" : "64px",
