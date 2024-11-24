@@ -22,39 +22,33 @@ const TypewriterText = () => {
     };
 
     useEffect(() => {
-        const startAnimation = () => {
-            setText({ write: '', run: '' });
-            setIsWriteComplete(false);
+        // Initial delay before starting animation
+        const initialDelay = setTimeout(() => {
+            const writeInterval = typeWord('Write', 'write', () => {
+                clearInterval(writeInterval);
+                setIsWriteComplete(true);
+            });
+        }, 800); // 800ms delay before starting
 
-            setTimeout(() => {
-                const writeInterval = typeWord('Write', 'write', () => {
-                    clearInterval(writeInterval);
-                    setIsWriteComplete(true);
-                });
-            }, 300);
-        };
-
-        startAnimation();
-        const animationLoop = setInterval(startAnimation, 4000);
-        return () => clearInterval(animationLoop);
-    }, []);
+        return () => clearTimeout(initialDelay);
+    }, []); // Run only once on mount
 
     useEffect(() => {
         if (!isWriteComplete) return;
 
-        const timeout = setTimeout(() => {
-            const runInterval = typeWord('Run', 'run', () => {
-                clearInterval(runInterval);
-                setTimeout(() => {
-                    setText({ write: '', run: '' });
-                    setIsWriteComplete(false);
-                }, 800);
-            });
-            return () => clearInterval(runInterval);
-        }, 100);
+        const runInterval = typeWord('Run', 'run', () => {
+            clearInterval(runInterval);
+        });
 
-        return () => clearTimeout(timeout);
+        return () => clearInterval(runInterval);
     }, [isWriteComplete]);
+
+    useEffect(() => {
+        const cursorInterval = setInterval(() => {
+            setShowCursor(prev => !prev);
+        }, 400);
+        return () => clearInterval(cursorInterval);
+    }, []);
 
     useEffect(() => {
         const cursorInterval = setInterval(() => {

@@ -48,21 +48,17 @@ export default function Example() {
                   </a>
                 </div>
               </div>
-              <div className="mt-16 flow-root sm:mt-12">
-                <div className="relative rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
-                  <img
-                    src="/Images/ShowcaseImage.jpeg"
-                    alt="App screenshot"
-                    width={2432}
-                    height={1442}
-                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10 scale-110 translate-y-1/3"
-                  />
-                </div>
-              </div>
+              <img
+                src="/Images/ShowcaseImage.jpeg"
+                alt="App screenshot"
+                width={2432}
+                height={1442}
+                className="rounded-md shadow-2xl ring-1 ring-gray-900/10 scale-110 translate-y-1/3"
+              />
             </div>
           </div>
         </div>
-      </main>
-    </div>
+      </main >
+    </div >
   );
 }
