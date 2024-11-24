@@ -48,9 +48,10 @@ const languageConfigs: Record<string, LanguagePatterns> = {
 
 const useCodeMetrics = (code: string = '', language: string) => {
   return useMemo(() => {
+    if (!language){ return; }
     const config = languageConfigs[language.toLowerCase()] || languageConfigs.python;
     const lines = code.split('\n');
-    
+
     // Count non-empty lines
     const nonEmptyLines = lines.filter(line => line.trim().length > 0);
 
@@ -63,13 +64,13 @@ const useCodeMetrics = (code: string = '', language: string) => {
       const isLineComment = config.lineComments.some(comment => trimmed.includes(comment));
       if (isLineComment) {
         const commentStartIndex = trimmed.indexOf(config.lineComments[0]);
-        
+
         // Detect if it's a standalone comment or inline comment
         if (commentStartIndex === 0 || trimmed.slice(0, commentStartIndex).trim().length > 0) {
           return true; // Comment could either be standalone or inline
         }
       }
-      
+
       // Handle block comments, including multi-line
       if (inBlockComment) {
         if (trimmed.endsWith(config.blockCommentEnd)) {
@@ -77,13 +78,13 @@ const useCodeMetrics = (code: string = '', language: string) => {
         }
         return true;
       }
-      
+
       // Detect the start of block comments
       if (trimmed.startsWith(config.blockCommentStart)) {
         inBlockComment = true;
         return true;
       }
-      
+
       // Check for inline block comments (e.g., "code /* comment */ more code")
       const inlineCommentStart = trimmed.indexOf(config.blockCommentStart);
       if (inlineCommentStart !== -1) {

@@ -58,7 +58,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                         <FileText className="h-5 w-5" />
                         Document
                     </TabsTrigger>
-                    <TabsTrigger
+                    {status != 'failed' && <TabsTrigger
                         value="analysis"
                         className={cn(
                             "relative h-14 px-4",
@@ -72,6 +72,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                         <BarChart className="h-5 w-5" />
                         Code Analysis
                     </TabsTrigger>
+                    }
 
                 </TabsList>
                 {/* Status Text on the left */}
