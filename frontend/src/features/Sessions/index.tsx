@@ -60,6 +60,8 @@ const Sessions = () => {
                 return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20';
             case 'pending':
                 return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20';
+            case 'failed':
+                return 'text-red-600 bg-red-100 dark:text-red-400 dark:bg-red-900/20';
             default:
                 return 'text-neutral-600 bg-neutral-100 dark:text-neutral-400 dark:bg-neutral-900/20';
         }
@@ -91,27 +93,29 @@ const Sessions = () => {
                             <Table>
                                 <TableHeader className="bg-white dark:bg-black">
                                     <TableRow>
-                                        <TableHead>Date</TableHead>
-                                        <TableHead>
-                                            <Select
-                                                value={selectedLanguage}
-                                                onValueChange={setSelectedLanguage}
-                                            >
-                                                <SelectTrigger className="p-0 h-auto text-sm font-medium text-muted-foreground border-0 hover:no-underline focus:ring-0 focus:ring-offset-0">
-                                                    {capFirst(selectedLanguage)} 
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                    <SelectItem value="all">All Languages</SelectItem>
-                                                    {languages.map((lang) => (
-                                                        <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
-                                                            {capFirst(lang)}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
+                                        <TableHead className="w-[45%] h-10">Summary</TableHead>
+                                        <TableHead className="w-[15%] h-10">
+                                            <div className="flex items-center h-full">
+                                                <Select
+                                                    value={selectedLanguage}
+                                                    onValueChange={setSelectedLanguage}
+                                                >
+                                                    <SelectTrigger className="p-0 h-auto text-sm font-medium text-muted-foreground border-0 hover:no-underline focus:ring-0 focus:ring-offset-0">
+                                                        {capFirst(selectedLanguage)}
+                                                    </SelectTrigger>
+                                                    <SelectContent>
+                                                        <SelectItem value="all">All Languages</SelectItem>
+                                                        {languages.map((lang) => (
+                                                            <SelectItem key={lang.toLowerCase()} value={lang.toLowerCase()}>
+                                                                {capFirst(lang)}
+                                                            </SelectItem>
+                                                        ))}
+                                                    </SelectContent>
+                                                </Select>
+                                            </div>
                                         </TableHead>
-                                        <TableHead>Status</TableHead>
-                                        <TableHead>Summary</TableHead>
+                                        <TableHead className="w-[15%] h-10">Status</TableHead>
+                                        <TableHead className="w-[25%] h-10">Date</TableHead>
                                     </TableRow>
                                 </TableHeader>
                             </Table>
@@ -125,26 +129,26 @@ const Sessions = () => {
                                             className="cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800/50"
                                             onClick={() => navigate(`/sessions/${session.id}`)}
                                         >
-                                            <TableCell className="font-medium">
-                                                {session.created_at && formatDate(session.created_at)}
+                                            <TableCell className="max-w-md truncate py-3">
+                                                {session.summary}
                                             </TableCell>
-                                            <TableCell>{session.language != null && capFirst(session.language)}</TableCell>
-                                            <TableCell>
+                                            <TableCell className="py-3">
+                                                {session.language != null && capFirst(session.language)}
+                                            </TableCell>
+                                            <TableCell className="py-3">
                                                 <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(session.status)}`}>
                                                     {session.status.charAt(0).toUpperCase() + session.status.slice(1)}
                                                 </span>
                                             </TableCell>
-                                            <TableCell>
-                                                <span className="inline-flex items-center px-2 py-1">
-                                                    {session.summary}
-                                                </span>
+                                            <TableCell className="py-3">
+                                                {session.created_at && formatDate(session.created_at)}
                                             </TableCell>
                                         </TableRow>
                                     ))}
                                     {filteredSessions.length === 0 && (
                                         <TableRow>
                                             <TableCell colSpan={4} className="text-center text-muted-foreground py-8">
-                                                {selectedLanguage === 'all' 
+                                                {selectedLanguage === 'all'
                                                     ? "No sessions found. Create a new session to get started."
                                                     : `No ${selectedLanguage} sessions found.`}
                                             </TableCell>
