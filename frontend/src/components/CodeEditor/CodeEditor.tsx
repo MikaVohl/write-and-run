@@ -24,14 +24,14 @@ const CodeEditor: React.FC<CodeEditorProps> = ({ language, code, onChange }) => 
       vertical: 'auto',          // Show vertical scrollbar only when necessary
       horizontal: 'auto',        // Show horizontal scrollbar only when necessary
       useShadows: false,         // Disable shadows around the scrollbar
-      verticalScrollbarSize: 8,  // Adjust the size as needed
+      verticalScrollbarSize: 8,
       horizontalScrollbarSize: 8,
     },
     minimap: {
       enabled: false,            // Disable the minimap if not needed
     },
     wordWrap: 'on',              // Wrap long lines to prevent horizontal scrolling
-    fontSize: '14px',
+    fontSize: 14,
   } as const;
 
   // Update the editor code when Monaco Editor content changes
