@@ -3,7 +3,7 @@ import { useState } from 'react';
 interface UseTestsGenerationProps {
     sessionId: string;
     apiUrl: string;
-    onSuccess: (code: string, reason: string, status: string) => Promise<void>;
+    onSuccess: (code: string, reason: string, status: number) => Promise<void>;
 }
 
 export const useTestsGeneration = ({ sessionId, apiUrl, onSuccess }: UseTestsGenerationProps) => {

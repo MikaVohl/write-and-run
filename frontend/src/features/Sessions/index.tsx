@@ -47,7 +47,7 @@ const Sessions = () => {
             const utcDate = new Date(dateString + 'Z');
             const localDate = new Date(utcDate.getTime());
             const distance = formatDistanceToNow(localDate, { addSuffix: true });
-            return distance.replace(/minute(s)?/, 'mins').replace(/second(s)?/, 'sec').replace(/hour(s)?/, 'hr').replace(/day(s)?/, 'd');
+            return distance.replace(/minute(s)?/, 'mins').replace(/second(s)?/, 'sec').replace(/hour(s)?/, 'hr').replace(/day(s)?/, 'd').replace("less than a mins ago", "just now");
         } catch (error) {
             console.error('Error parsing date:', error);
             return dateString;
