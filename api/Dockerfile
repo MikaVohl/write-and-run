@@ -1,15 +1,17 @@
-FROM python:3.8-slim-buster
+FROM python:3.8-alpine
 
 # Set working directory
 WORKDIR /app
 
 # Installs gcc and other compile dependencies
-RUN apt-get update && \
-    apt-get install -y \
-    gcc \
-    default-jdk \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && \
+#     apt-get install -y \
+#     gcc \
+#     default-jdk \
+#     && apt-get clean \
+#     && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache gcc musl-dev libffi-dev openjdk8
+
 
 # Copy only requirements first to leverage Docker cache
 COPY requirements.txt requirements.txt
@@ -33,7 +35,7 @@ ENV OPENAI_API_KEY="sk-proj-hWBeXkxt6WEhO9b0agIbZtmbI-uqRrivUj2hYxyBZ4f6Y4_fWXvS
 ENV PYTHONUNBUFFERED=1
 
 # Expose the port the app runs on
-EXPOSE 5001
+EXPOSE 8080
 
 # Switch to non-root user
 USER appuser
