@@ -47,7 +47,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                         <FileText className="h-5 w-5" />
                         Document
                     </TabsTrigger>
-                    {status != 'failed' && <TabsTrigger
+                    {status === 'completed' && <TabsTrigger
                         value="analysis"
                         className={cn(
                             "relative h-14 px-4",
@@ -109,18 +109,20 @@ export const TabView = ({ imageUrl, code, language, prompt, className, analysis,
                     </div>
                 </TabsContent>
 
-                <TabsContent
-                    value="analysis"
-                    className={cn(
-                        "absolute inset-0",
-                        "m-0 p-0",
-                        "overflow-auto",
-                        "data-[state=inactive]:pointer-events-none",
-                        "data-[state=inactive]:hidden"
-                    )}
-                >
-                    <CodeAnalysis code={code} language={language} analysis={analysis} />
-                </TabsContent>
+                {status === 'completed' && (
+                    <TabsContent
+                        value="analysis"
+                        className={cn(
+                            "absolute inset-0",
+                            "m-0 p-0",
+                            "overflow-auto",
+                            "data-[state=inactive]:pointer-events-none",
+                            "data-[state=inactive]:hidden"
+                        )}
+                    >
+                        <CodeAnalysis code={code} language={language} analysis={analysis} />
+                    </TabsContent>
+                )}
             </div>
         </Tabs>
     );
