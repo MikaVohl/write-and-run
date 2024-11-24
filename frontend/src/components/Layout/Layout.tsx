@@ -44,8 +44,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {isSidebarExpanded && (
             <div className="flex items-center flex-1 min-w-0">
               <Link to="/" className="flex items-center gap-2 text-gray-900">
-
-                <img src={logo} className="w-10 " />
+                <img src={logo} className="w-8 mr-2" />
                 <span className="font-semibold truncate">Write and Run</span>
               </Link>
             </div>

@@ -134,9 +134,9 @@ const SessionDashboard = () => {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
       {/* Main split view */}
-      <div className="flex-1 min-h-0 grid grid-cols-2 divide-x divide-gray-200">
+      <div className="flex-1 min-h-0 grid grid-cols-10 divide-x divide-gray-200">
         {/* Left Panel - Document Viewer */}
-        <div className="h-full overflow-hidden">
+        <div className="h-full col-span-4 overflow-hidden">
           <TabView
             className="h-full"
             imageUrl={imageUrl}
@@ -148,7 +148,7 @@ const SessionDashboard = () => {
         </div>
 
         {/* Right Panel - Code Editor */}
-        <div className="h-full overflow-hidden flex flex-col">
+        <div className="h-full col-span-6 overflow-hidden flex flex-col">
           <div className="relative flex-1 min-h-0">
             {showProcessingOverlay && (
               <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
