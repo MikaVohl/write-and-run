@@ -90,12 +90,13 @@ def generate_tests(code, language, context=None):
     Only generate tests where it makes sense to do so, functions that have no parameters or no recognizable strucure shouldn't have tests.
     Return only the output in this specific JSON format in plaintext, with no triple backticks, include spaces, tabs, and newlines as needed:
     {{
-        "code": "<updated source code>", # Empty string if no tests were created
+        "code": "<updated source code>",
         "reason": "<reason for rejection>", # Empty string if tests were created
+        "status": "<status of the test generation>" # Indicate if tests were created or not, 1 for created, 0 for not created
     }}
     Follow these rules:
     1. Identify whether it makes sense to test the provided code.
-       - If not, immediately return a 'code' field with an empty string and a 'reason' field with a very concise explanation on why tests were not created.
+       - If not, immediately return a status of 0, a 'code' field with an empty string, and a 'reason' field with a very concise explanation on why tests were not created.
     2. Identify whether the provided code already includes a callable function.
        - If it doesn't, encapsulate the logic into a function.
     3. Add a few meaningful test cases, without providing the expected output, adding very concise comments to each case:
@@ -138,8 +139,9 @@ def generate_tests(code, language, context=None):
 
         output_code = parsed_data['code']
         reason = parsed_data['reason']
+        status = parsed_data['status']
 
-        return output_code, language, reason
+        return output_code, language, reason, status
     else:
         print("Error: No response received from the model.")
         sys.exit(1)

@@ -59,8 +59,8 @@ const SessionDashboard = () => {
   } = useTestsGeneration({
     sessionId: sessionId!,
     apiUrl,
-    onSuccess: async (newCode: string, reason: string) => {
-      if (newCode === '') {
+    onSuccess: async (newCode: string, reason: string, status: string) => {
+      if (newCode === '' || status !== '1') {
         showError(reason);
         return;
       }

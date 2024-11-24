@@ -75,11 +75,12 @@ def tests():
     if not code or not language:
         return jsonify({"error": "Both 'code' and 'language' are required fields."}), 400
 
-    code_out, language, reason = generate_tests(code, language)
+    code_out, language, reason, status = generate_tests(code, language)
     response = {
         'code': code_out,
         'language': language,
         'reason': reason,
+        'status': status
     }
     print(response)
     return jsonify(response), 201
