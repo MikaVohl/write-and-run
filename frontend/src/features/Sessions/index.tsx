@@ -77,7 +77,7 @@ const Sessions = () => {
                             </CardDescription>
                         </div>
                         <Button
-                            onClick={() => navigate('/')}
+                            onClick={() => navigate('/home')}
                             className="flex items-center gap-2"
                         >
                             <FileCode className="w-4 h-4" />
