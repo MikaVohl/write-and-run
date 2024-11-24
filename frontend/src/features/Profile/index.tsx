@@ -32,7 +32,7 @@ const Profile = () => {
                   <dt className="text-sm font-medium text-gray-500 sm:w-48">
                     Full Name
                   </dt>
-                  <dd className="mt-1 text-base font-semibold text-gray-900 sm:mt-0">
+                  <dd className="mt-1 text-base font-base text-gray-900 sm:mt-0">
                     {user?.user_metadata.full_name}
                   </dd>
                 </div>
