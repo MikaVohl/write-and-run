@@ -20,9 +20,10 @@ interface TabViewProps {
     language?: Language;
     prompt?: string;
     className?: string;
+    analysis?: string;
 }
 
-export const TabView = ({ imageUrl, code, language, prompt, className }: TabViewProps) => {
+export const TabView = ({ imageUrl, code, language, prompt, className, analysis }: TabViewProps) => {
     const [zoom, setZoom] = useState(1);
 
     return (
@@ -103,7 +104,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className }: TabView
                         "data-[state=inactive]:hidden"
                     )}
                 >
-                    <CodeAnalysis code={code} language={language} />
+                    <CodeAnalysis code={code} language={language} analysis={analysis} />
                 </TabsContent>
             </div>
         </Tabs>
