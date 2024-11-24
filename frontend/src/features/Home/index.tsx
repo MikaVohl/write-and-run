@@ -2,7 +2,6 @@ import UploadComponent from "./components/Upload";
 
 const Home = () => {
   
-  
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="flex flex-col items-center w-full">
