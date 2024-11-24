@@ -1,10 +1,7 @@
 import TypewriterText from "@/components/TypeWriterText";
-
 export default function Example() {
-
-
   return (
-    <div className="bg-white">
+    <div className="bg-white overflow-clip h-screen">
       {/* Header */}
       <header className="absolute inset-x-0 top-0 z-50">
         <nav
@@ -22,15 +19,14 @@ export default function Example() {
             </a>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="./Home" className="text-sm/6 font-semibold text-gray-900">
+            <a href="/home" className="text-sm/6 font-semibold text-gray-900">
               Log in <span aria-hidden="true">&rarr;</span>
             </a>
           </div>
         </nav>
       </header>
-
       <main className="isolate">
-        <div className="relative pt-14">
+        <div className="relative pt-1">
           <div
             aria-hidden="true"
             className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
@@ -39,27 +35,27 @@ export default function Example() {
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
                 <TypewriterText />
-                <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+                <p className="mt-5 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                   Upload your handwritten code and run it in your browser with
                   ease
                 </p>
-                <div className="mt-10 flex items-center justify-center gap-x-6">
+                <div className="mt-8 flex justify-center">
                   <a
                     href="/home"
-                    className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    className="rounded-full bg-indigo-600 px-8 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   >
                     Start now
                   </a>
                 </div>
               </div>
-              <div className="mt-16 flow-root sm:mt-24">
-                <div className="-m-2 rounded-xl bg-gray-900/5 p-2 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <div className="mt-16 flow-root sm:mt-12">
+                <div className="relative rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                   <img
-                    alt="App screenshot"
                     src="/src/assets/Images/ShowcaseImage.jpeg"
+                    alt="App screenshot"
                     width={2432}
                     height={1442}
-                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10"
+                    className="rounded-md shadow-2xl ring-1 ring-gray-900/10 scale-110 translate-y-1/3"
                   />
                 </div>
               </div>
