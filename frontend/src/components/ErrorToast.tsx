@@ -8,7 +8,7 @@ interface ErrorToastProps {
 const ErrorToast = ({ message }: ErrorToastProps) => {
     return (
         <div className="flex items-start gap-2">
-            <AlertCircleIcon className="text-red-400"/>
+            <AlertCircleIcon className="text-red-400 mr-2"/>
             <p className="text-sm text-gray-900">{message}</p>
         </div>
     );
