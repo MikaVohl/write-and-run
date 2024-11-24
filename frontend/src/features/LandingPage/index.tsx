@@ -1,3 +1,5 @@
+import TypewriterText from "@/components/TypeWriterText";
+
 export default function Example() {
 
 
@@ -36,9 +38,7 @@ export default function Example() {
           <div className="py-24 sm:py-32 lg:pb-40">
             <div className="mx-auto max-w-7xl px-6 lg:px-8">
               <div className="mx-auto max-w-2xl text-center">
-                <h1 className="text-balance text-5xl font-semibold tracking-tight text-gray-900 sm:text-7xl">
-                  Write and Run
-                </h1>
+                <TypewriterText />
                 <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                   Upload your handwritten code and run it in your browser with
                   ease
