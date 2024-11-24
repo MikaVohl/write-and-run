@@ -31,8 +31,6 @@ const SessionDashboard = () => {
   const [reason, setReason] = useState<string>('');
 
 
-
-
   // Session and Image Queries
   const {
     data: session,
