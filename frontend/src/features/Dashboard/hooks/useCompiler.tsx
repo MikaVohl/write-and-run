@@ -33,11 +33,14 @@ export const useCompiler = () => {
             setIsCompiling(true);
         },
         onSuccess: (data) => {
-            console.log(data);
             if (data['success'] == true) {
-                setCompilerOutput(data.stdout);
+                if (!data.stdout) {
+                    console.log("Test");
+                    setCompilerOutput("No Output");
+                }else {
+                    setCompilerOutput(data.stdout);
+                }
             } else if (data['success'] == false) {
-                console.log("TEST");
                 setCompilerOutput(data.error!);
             } 
  
