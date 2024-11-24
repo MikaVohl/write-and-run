@@ -143,6 +143,7 @@ const SessionDashboard = () => {
             code={localCode}
             language={session?.language as Language}
             prompt={session?.prompt!}
+            analysis={session?.analysis!}
           />
         </div>
 
