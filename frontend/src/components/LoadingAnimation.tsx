@@ -3,7 +3,7 @@ import runningAnimation from '@/assets/Animations/runningman.json';
 
 const LoadingAnimation = () => {
   return (
-    <div className="relative h-20 w-full flex items-center justify-center overflow-hidden">
+    <div className="relative h-20 w-full flex items-center justify-center overflow-hidden pr-48">
       <div className="animate-bounce-horizontal">
         <div className="h-20 w-20">
           <Lottie
