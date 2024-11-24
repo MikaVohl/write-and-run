@@ -4,9 +4,9 @@ const Home = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
       <div className="flex flex-col items-center w-full">
-        <div>
-          <div className="flex flex-row items-center gap-5">
-            <h1 className="text-5xl font-bold text-center text-black">
+        <div className="flex flex-col items-center">
+          <div className="flex flex-row items-center pt-16 gap-5">
+            <h1 className="flex text-5xl font-bold  text-black">
               Write and Run
             </h1>
             <img src="/src/assets/Logo/W&RLogo.png" className="w-28" />
