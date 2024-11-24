@@ -96,7 +96,7 @@ def generate_tests(code, language, context=None):
     }}
     Follow these rules:
     1. Identify whether it makes sense to test the provided code.
-       - If not, immediately return a 'code' field with an empty string and a 'reason' field explaining why tests were not created.
+       - If not, immediately return a 'code' field with an empty string and a 'reason' field with a very concise explanation on why tests were not created.
     2. Identify whether the provided code already includes a callable function.
        - If it doesn't, encapsulate the logic into a function.
     3. Add a few meaningful test cases, without providing the expected output, adding very concise comments to each case:

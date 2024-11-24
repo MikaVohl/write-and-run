@@ -149,7 +149,7 @@ const SessionDashboard = () => {
         {/* Right Panel - Code Editor */}
         <div className="h-full col-span-6 overflow-hidden flex flex-col">
           <div className="relative flex-1 min-h-0">
-            {showProcessingOverlay && (
+            {/* {showProcessingOverlay && ( */}
               <div className="absolute inset-0 bg-white/80 dark:bg-neutral-900/80 z-50 flex flex-col items-center justify-center gap-4">
                 <LoadingAnimation />
                 <p className="text-sm text-neutral-600 dark:text-neutral-400">
@@ -159,7 +159,7 @@ const SessionDashboard = () => {
                   }
                 </p>
               </div>
-            )}
+            {/* )} */}
             <CodeEditorSection
               handleLanguageSelect={handleLanguageChange}
               language={session?.language || ''}
