@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Language, Session, UpdateSessionInput } from '@/types/types';
 import { supabase } from '@/supabaseClient';
+import { AlertCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 interface UseImageProcessingProps {
     session: Session | undefined;
@@ -27,6 +29,25 @@ export const useImageProcessing = ({
     const [imageUrl, setImageUrl] = useState<string>("");
     const apiUrl = import.meta.env.VITE_API_URL;
     const queryClient = useQueryClient();
+    const { toast } = useToast();
+
+    const showError = (title: string, message: string) => {
+        toast({
+            variant: "destructive",
+            duration: 5000,
+            className: "bg-white border-red-100",
+            description: (
+                <div className="flex items-start gap-2">
+                    <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0" />
+                    <div className="flex flex-col gap-1">
+                        <p className="font-medium text-gray-700">{title}</p>
+                        <p className="text-sm text-gray-500">{message}</p>
+                    </div>
+                </div>
+            ),
+        });
+    };
+
     const processImageMutation = useMutation({
         mutationFn: async (input: ImageProcessingInput) => {
             // Call to ML API for code detection
@@ -75,6 +96,11 @@ export const useImageProcessing = ({
                 .update({ status: 'failed' })
                 .eq('id', session!.id);
 
+            showError(
+                "Failed to save results",
+                "There was an error saving the processed code. Please try again."
+            );
+
             if (updateError) {
                 console.error('Error updating failure status:', updateError);
             }
@@ -109,7 +135,7 @@ export const useImageProcessing = ({
 
     useEffect(() => {
         if (imageUrl && session?.status === 'pending') {
-            processImageMutation.mutate({img_url: imageUrl, prompt: session.prompt!});
+            processImageMutation.mutate({ img_url: imageUrl, prompt: session.prompt! });
         }
     }, [imageUrl, session?.status]);
 
