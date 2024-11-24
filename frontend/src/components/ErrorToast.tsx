@@ -8,7 +8,7 @@ interface ErrorToastProps {
 const ErrorToast = ({ message }: ErrorToastProps) => {
     return (
         <div className="flex items-start gap-2">
-            <AlertCircleIcon />
+            <AlertCircleIcon className="text-red-400"/>
             <p className="text-sm text-gray-900">{message}</p>
         </div>
     );
@@ -20,7 +20,7 @@ export const useErrorToast = () => {
     const showError = (message: string) => {
         toast({
             variant: "destructive",
-            duration: 5000,
+            duration: 3000,
             className: "bg-white border-red-100",
             description: <ErrorToast message={message} />,
         });

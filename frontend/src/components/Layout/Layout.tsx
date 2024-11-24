@@ -130,8 +130,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 bg-white">
-        <div className="flex-1 h-full">{children}</div>
         <Toaster />
+        <div className="flex-1 h-full">{children}</div>
       </main>
     </div>
   );
