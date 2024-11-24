@@ -112,6 +112,7 @@ const SessionDashboard = () => {
 
   useEffect(() => {
 
+      // If session is not loading and session is null, navigate to home
     if (!isSessionLoading && !session) {
       navigate('/home');
     }
