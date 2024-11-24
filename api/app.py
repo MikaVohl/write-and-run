@@ -7,7 +7,12 @@ import os
 
 app = Flask(__name__)
 
-CORS(app)
+CORS(app, 
+     resources={r"/*": {
+        "origins": "*",
+        "methods": ["OPTIONS", "POST", "GET"],
+        "allow_headers": ["Content-Type", "Authorization"]
+     }})
 
 def require_json(f):
     @wraps(f)
