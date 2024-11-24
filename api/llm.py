@@ -14,7 +14,6 @@ def request_code(img_url=None, img_base64=None):
     # Define the structured prompt with instructions
 
     # TODO: What should be done if there is no code detected? No language detected?
-    # TODO: Try to speed up responses. Maybe reduce max_tokens? Change the model?
     system_instruction = """
     You are an assistant tasked with transcribing handwritten code from images into a specific JSON format for compilation and execution. You will attempt to generate an output that stays as true to the input image as possible. Adhere strictly to the formatting guidelines:
     1. Identify the programming language (either C, Bash, Java, or Python).
