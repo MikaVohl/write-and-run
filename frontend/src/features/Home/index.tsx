@@ -6,7 +6,7 @@ const Home = () => {
       <div className="flex flex-col items-center w-full">
         <div>
           <div className="flex flex-row items-center gap-5">
-            <h1 className="text-5xl font-bold text-center font-mono text-black">
+            <h1 className="text-5xl font-bold text-center text-black">
               Write and Run
             </h1>
             <img src="/src/assets/Logo/W&RLogo.png" className="w-28" />
