@@ -1,0 +1,244 @@
+[
+    {
+        "taskDefinition": {
+            "taskDefinitionArn": "arn:aws:ecs:us-east-1:772068951642:task-definition/codejam-task:2",
+            "containerDefinitions": [
+                {
+                    "name": "codejam-container",
+                    "image": "772068951642.dkr.ecr.us-east-1.amazonaws.com/codejam-api:latest",
+                    "cpu": 256,
+                    "memory": 512,
+                    "portMappings": [
+                        {
+                            "containerPort": 8080,
+                            "hostPort": 8080,
+                            "protocol": "tcp"
+                        }
+                    ],
+                    "essential": true,
+                    "environment": [],
+                    "mountPoints": [],
+                    "volumesFrom": [],
+                    "systemControls": []
+                }
+            ],
+            "family": "codejam-task",
+            "executionRoleArn": "arn:aws:iam::772068951642:role/ecsTaskExecutionRole",
+            "networkMode": "awsvpc",
+            "revision": 2,
+            "volumes": [],
+            "status": "ACTIVE",
+            "requiresAttributes": [
+                {
+                    "name": "com.amazonaws.ecs.capability.ecr-auth"
+                },
+                {
+                    "name": "ecs.capability.execution-role-ecr-pull"
+                },
+                {
+                    "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+                },
+                {
+                    "name": "ecs.capability.task-eni"
+                }
+            ],
+            "placementConstraints": [],
+            "compatibilities": [
+                "EC2",
+                "FARGATE"
+            ],
+            "requiresCompatibilities": [
+                "FARGATE"
+            ],
+            "cpu": "256",
+            "memory": "512",
+            "registeredAt": "2024-11-23T19:36:53.860000-05:00",
+            "registeredBy": "arn:aws:iam::772068951642:user/colibri-control-iam"
+        }
+    },
+    {
+        "taskDefinitionArn": "arn:aws:ecs:us-east-1:772068951642:task-definition/codejam-task:2",
+        "containerDefinitions": [
+            {
+                "name": "codejam-container",
+                "image": "772068951642.dkr.ecr.us-east-1.amazonaws.com/codejam-api:latest",
+                "cpu": 256,
+                "memory": 512,
+                "portMappings": [
+                    {
+                        "containerPort": 8080,
+                        "hostPort": 8080,
+                        "protocol": "tcp"
+                    }
+                ],
+                "essential": true,
+                "environment": [],
+                "mountPoints": [],
+                "volumesFrom": [],
+                "systemControls": []
+            }
+        ],
+        "family": "codejam-task",
+        "executionRoleArn": "arn:aws:iam::772068951642:role/ecsTaskExecutionRole",
+        "networkMode": "awsvpc",
+        "revision": 2,
+        "volumes": [],
+        "status": "ACTIVE",
+        "requiresAttributes": [
+            {
+                "name": "com.amazonaws.ecs.capability.ecr-auth"
+            },
+            {
+                "name": "ecs.capability.execution-role-ecr-pull"
+            },
+            {
+                "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+            },
+            {
+                "name": "ecs.capability.task-eni"
+            }
+        ],
+        "placementConstraints": [],
+        "compatibilities": [
+            "EC2",
+            "FARGATE"
+        ],
+        "requiresCompatibilities": [
+            "FARGATE"
+        ],
+        "cpu": "256",
+        "memory": "512",
+        "registeredAt": "2024-11-23T19:36:53.860000-05:00",
+        "registeredBy": "arn:aws:iam::772068951642:user/colibri-control-iam"
+    },
+    {
+        "Vpc": {
+            "CidrBlock": "10.0.0.0/16",
+            "DhcpOptionsId": "dopt-073cb7c66f4139584",
+            "State": "pending",
+            "VpcId": "vpc-0ea16c6f0da51c6ed",
+            "OwnerId": "772068951642",
+            "InstanceTenancy": "default",
+            "Ipv6CidrBlockAssociationSet": [],
+            "CidrBlockAssociationSet": [
+                {
+                    "AssociationId": "vpc-cidr-assoc-03f1f6945e3e09694",
+                    "CidrBlock": "10.0.0.0/16",
+                    "CidrBlockState": {
+                        "State": "associated"
+                    }
+                }
+            ],
+            "IsDefault": false
+        }
+    },
+    {
+        "Subnet": {
+            "AvailabilityZone": "us-east-1a",
+            "AvailabilityZoneId": "use1-az6",
+            "AvailableIpAddressCount": 251,
+            "CidrBlock": "10.0.1.0/24",
+            "DefaultForAz": false,
+            "MapPublicIpOnLaunch": false,
+            "State": "available",
+            "SubnetId": "subnet-00b5faa2cd45eecd7",
+            "VpcId": "vpc-0ea16c6f0da51c6ed",
+            "OwnerId": "772068951642",
+            "AssignIpv6AddressOnCreation": false,
+            "Ipv6CidrBlockAssociationSet": [],
+            "SubnetArn": "arn:aws:ec2:us-east-1:772068951642:subnet/subnet-00b5faa2cd45eecd7",
+            "EnableDns64": false,
+            "Ipv6Native": false,
+            "PrivateDnsNameOptionsOnLaunch": {
+                "HostnameType": "ip-name",
+                "EnableResourceNameDnsARecord": false,
+                "EnableResourceNameDnsAAAARecord": false
+            }
+        }
+    },
+    {
+        "InternetGateway": {
+            "Attachments": [],
+            "InternetGatewayId": "igw-0db8a397ca374afa6",
+            "OwnerId": "772068951642",
+            "Tags": []
+        }
+    },
+    {
+        "RouteTable": {
+            "Associations": [],
+            "PropagatingVgws": [],
+            "RouteTableId": "rtb-01b38d61afca821b2",
+            "Routes": [
+                {
+                    "DestinationCidrBlock": "10.0.0.0/16",
+                    "GatewayId": "local",
+                    "Origin": "CreateRouteTable",
+                    "State": "active"
+                }
+            ],
+            "Tags": [],
+            "VpcId": "vpc-0ea16c6f0da51c6ed",
+            "OwnerId": "772068951642"
+        }
+    },
+    {
+        "AssociationId": "rtbassoc-0df313a62afcb3650",
+        "AssociationState": {
+            "State": "associated"
+        }
+    },
+    {
+        "SecurityGroups": [
+            {
+                "Description": "default VPC security group",
+                "GroupName": "default",
+                "IpPermissions": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": [
+                            {
+                                "GroupId": "sg-0fead925d18b356a9",
+                                "UserId": "772068951642"
+                            }
+                        ]
+                    }
+                ],
+                "OwnerId": "772068951642",
+                "GroupId": "sg-0fead925d18b356a9",
+                "IpPermissionsEgress": [
+                    {
+                        "IpProtocol": "-1",
+                        "IpRanges": [
+                            {
+                                "CidrIp": "0.0.0.0/0"
+                            }
+                        ],
+                        "Ipv6Ranges": [],
+                        "PrefixListIds": [],
+                        "UserIdGroupPairs": []
+                    }
+                ],
+                "VpcId": "vpc-0ea16c6f0da51c6ed"
+            }
+        ]
+    },
+    {
+        "Return": true,
+        "SecurityGroupRules": [
+            {
+                "SecurityGroupRuleId": "sgr-0b0ab4a86496c4f17",
+                "GroupId": "sg-0fead925d18b356a9",
+                "GroupOwnerId": "772068951642",
+                "IsEgress": false,
+                "IpProtocol": "tcp",
+                "FromPort": 8080,
+                "ToPort": 8080,
+                "CidrIpv4": "0.0.0.0/0"
+            }
+        ]
+    }
+]

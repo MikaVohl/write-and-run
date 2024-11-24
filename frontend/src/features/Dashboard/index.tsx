@@ -1,6 +1,6 @@
 import { useSession, useSessionImage } from "@/api";
 import { cn } from "@/lib/utils";
-import { useParams } from "react-router-dom";
+import { Navigate, useParams } from "react-router-dom";
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { CodeEditorSection } from "./components/CodeEditor";
 import { CompilerOutput } from "./components/CompilerOutput";
@@ -14,14 +14,23 @@ import { useEffect, useState } from "react";
 import { Language } from "@/types/types";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import ErrorDialog from "./components/ErrorDialog";
+import { useNavigate } from 'react-router-dom';
 
 const SessionDashboard = () => {
+
   const { sessionId } = useParams<{ sessionId: string }>();
+  const navigate = useNavigate();
+  // Check is valid UUI ID
+
+  // If Session does not exist, navigate back to home page
+
   const apiUrl = import.meta.env.VITE_API_URL;
   const queryClient = useQueryClient();
   const [localCode, setLocalCode] = useState<string>('');
   const [open, setOpen] = useState<boolean>(false);
   const [reason, setReason] = useState<string>('');
+
+
 
 
   // Session and Image Queries
@@ -102,10 +111,15 @@ const SessionDashboard = () => {
   };
 
   useEffect(() => {
+
+    if (!isSessionLoading && !session) {
+      navigate('/home');
+    }
+   
     if (session?.code) {
       setLocalCode(session.code);
     }
-  }, [session?.code]);
+  }, [session?.code, isSessionLoading ]);
 
   const handleCodeChange = (newCode: string) => {
     setLocalCode(newCode);
@@ -133,6 +147,7 @@ const SessionDashboard = () => {
   if (isSessionLoading || isImageLoading) {
     return <></>;
   }
+
 
   const showProcessingOverlay = isProcessing ||
     session?.status === 'pending' ||
