@@ -3,7 +3,7 @@ import { useState } from 'react';
 interface UseTestsGenerationProps {
     sessionId: string;
     apiUrl: string;
-    onSuccess: (code: string) => Promise<void>;
+    onSuccess: (code: string, reason: string) => Promise<void>;
 }
 
 export const useTestsGeneration = ({ sessionId, apiUrl, onSuccess }: UseTestsGenerationProps) => {
@@ -30,7 +30,7 @@ export const useTestsGeneration = ({ sessionId, apiUrl, onSuccess }: UseTestsGen
             }
 
             const data = await response.json();
-            await onSuccess(data.code);
+            await onSuccess(data.code, data.reason);
         } catch (error) {
             setTestsError(error as Error);
             console.error('Error generating tests:', error);
