@@ -49,7 +49,7 @@ export default function Example() {
                 </div>
               </div>
               <div className="mt-16 flow-root sm:mt-12">
-                <div className="relative rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+                <div className="relative rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
                   <img
                     src="/Images/ShowcaseImage.jpeg"
                     alt="App screenshot"
