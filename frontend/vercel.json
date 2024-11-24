@@ -7,5 +7,6 @@
     ],
     "buildCommand": "npm run build",
     "outputDirectory": "./dist",
+    "publicDirectory": "src/assets",
     "installCommand": "npm install"
 }
