@@ -11,13 +11,15 @@ const CompilerCode: React.FC<CompilerOutputProps> = ({
   compilerOutput,
   className = "h-[18rem]",
 }) => {
-  const editorOptions = {
-    readOnly: true,
-    minimap: { enabled: false },
-    automaticLayout: true,
-    scrollBeyondLastLine: false,
-    theme: 'vs-light',
-  };
+const editorOptions = {
+  readOnly: true,
+  minimap: { enabled: false },
+  automaticLayout: true,
+  scrollBeyondLastLine: false,
+  theme: 'vs-light',
+  wordWrap: 'on',
+  fontSize: 14,
+} as const;
 
   return (
     <div className={`${className}`}>
