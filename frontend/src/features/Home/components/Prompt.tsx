@@ -45,7 +45,7 @@ const Prompt = ({ onSubmit }: { onSubmit: (content: string) => void }) => {
           <button
             onClick={handleSubmit}
             disabled={isLoading}
-            className="absolute right-2 top-1/2 transform -translate-y-1/2 
+            className="absolute right-3 top-1/2 transform -translate-y-2/3 
                        w-8 h-8 flex items-center justify-center
                        rounded-lg text-gray-400 hover:text-blue-500 
                        disabled:text-gray-300 disabled:hover:text-gray-300
