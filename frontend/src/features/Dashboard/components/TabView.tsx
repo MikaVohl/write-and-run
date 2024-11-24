@@ -84,7 +84,7 @@ export const TabView = ({ imageUrl, code, language, prompt, className }: TabView
                             </div>
                         </div>
                     )}
-                    <div className="flex-1 overflow-auto bg-gray-50">
+                    <div className="flex-1 relative overflow-auto bg-gray-50">
                         <ImageViewer
                             imageUrl={imageUrl}
                             zoom={zoom}
