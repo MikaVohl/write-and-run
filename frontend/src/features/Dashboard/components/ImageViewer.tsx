@@ -24,7 +24,6 @@ export const ImageViewer = ({ imageUrl, zoom, className }: ImageViewerProps) => 
                         <p className="text-sm text-gray-500">Loading document...</p>
                     </div>
                 )}
-                {/* TODO: Show top of document image. Currently hidden behind header */}
                 <img
                     src={imageUrl}
                     alt="Document Image"

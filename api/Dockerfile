@@ -27,8 +27,7 @@ COPY . .
 # Set proper permissions for the application directory
 RUN chown -R appuser:appuser /app
 
-# The API key should be passed at runtime, not build time
-ENV OPENAI_API_KEY="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"
+ENV OPENAI_API_KEY=""
 
 # Set Python to run in unbuffered mode
 ENV PYTHONUNBUFFERED=1
