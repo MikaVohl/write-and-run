@@ -5,8 +5,7 @@
             "destination": "/index.html"
         }
     ],
-    "buildCommand": "npm run build",
+    "buildCommand": "npm run build && cp -r src/assets dist/",
     "outputDirectory": "./dist",
-    "publicDirectory": "src/assets",
     "installCommand": "npm install"
 }

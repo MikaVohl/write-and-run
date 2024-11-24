@@ -9,7 +9,7 @@ const Home = () => {
             <h1 className="flex text-5xl font-bold  text-black">
               Write and Run
             </h1>
-            <img src="/src/assets/Logo/W&RLogo.png" className="w-28" />
+            <img src="/Logo/W&RLogo.png" className="w-28" />
           </div>
           <p className="text-lg text-center text-gray-500 pt-4">
             Upload your handwritten code and run it in your browser with ease

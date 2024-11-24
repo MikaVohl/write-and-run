@@ -12,7 +12,7 @@ export default function Example() {
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Write and Run</span>
               <img
-                src="/src/assets/Logo/W&RLogo.png"
+                src="/Logo/W&RLogo.png"
                 alt=""
                 className="h-12 w-auto"
               />
@@ -51,7 +51,7 @@ export default function Example() {
               <div className="mt-16 flow-root sm:mt-12">
                 <div className="relative rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
                   <img
-                    src="/src/assets/Images/ShowcaseImage.jpeg"
+                    src="/Images/ShowcaseImage.jpeg"
                     alt="App screenshot"
                     width={2432}
                     height={1442}

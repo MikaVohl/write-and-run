@@ -8,7 +8,7 @@ import { Icons } from "../ui/icons";
 import { Toaster } from "../ui/toaster";
 import { Separator } from "@/components/ui/separator";
 import SidebarLink from "./components/SideBarLink";
-import logo from "@/assets/Logo/W&RLogo.png";
+import logo from "/Logo/W&RLogo.png";
 
 interface LayoutProps {
   children: React.ReactNode;
