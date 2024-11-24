@@ -9,6 +9,8 @@ import {
     BarChart
 } from "lucide-react";
 
+import useCodeMetrics from "./useCodeMetrics";
+
 interface CodeAnalysisProps {
     code?: string;
     language?: string;
@@ -21,41 +23,8 @@ interface MetricItem {
     value: string | number;
 }
 
-const useCodeMetrics = (code: string = '') => {
-    return useMemo(() => {
-        const lines = code.split('\n');
-        const nonEmptyLines = lines.filter(line => line.trim().length > 0);
-        const commentLines = lines.filter(line => {
-            const trimmed = line.trim();
-            return (
-                trimmed.startsWith('//') ||
-                trimmed.startsWith('#') ||
-                trimmed.startsWith('/*') ||
-                trimmed.startsWith('*')
-            );
-        });
-
-        const complexityScore = Math.min(100, Math.round(
-            (nonEmptyLines.length * 2) +
-            (code.split('if').length * 3) +
-            (code.split('for').length * 4) +
-            (code.split('while').length * 4) +
-            (code.split('try').length * 2)
-        ));
-
-        return {
-            totalLines: lines.length,
-            codeLines: nonEmptyLines.length,
-            commentLines: commentLines.length,
-            characters: code.length,
-            functions: (code.match(/function|def|\w+\s*\([^)]*\)\s*{/g) || []).length,
-            complexity: complexityScore
-        };
-    }, [code]);
-};
-
 export const CodeAnalysis = ({ code = '', language = '' , analysis}: CodeAnalysisProps) => {
-    const stats = useCodeMetrics(code);
+    const stats = useCodeMetrics(code, language);
 
     const metrics: MetricItem[] = [
         { icon: FileCode, label: "Total Lines", value: stats.totalLines },
