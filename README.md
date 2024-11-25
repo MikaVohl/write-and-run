@@ -2,10 +2,12 @@
 
 Write and Run is a platform designed to streamline the process of practicing handwritten code by transforming it into executable programs. It eliminates inefficiencies in testing and debugging, enabling students to prepare more effectively for coding exams.
 
+This project was created in a 36 hour timespan and submitted as a part of the McGill CodeJam Hackathon, winning the "Best use of AI" award. The platform is hosted at [write-and-run.vercel.app](https://write-and-run.vercel.app/) and the Devpost submission can be found [here](https://devpost.com/software/write-and-run).
+
 ## Project Structure
 
 - **Frontend**  
-  - Built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), and [Tailwind CSS](https://tailwindcss.com/), using TypeScript (TSX) for dynamic and type-safe components.
+  - Built with [Vite](https://vitejs.dev/), [React](https://reactjs.org/), and [Tailwind CSS](https://tailwindcss.com/), using [TypeScript (TSX)](https://www.typescriptlang.org/) for dynamic and type-safe components.
   - Focused on delivering a smooth and intuitive user interface.
 
 - **Backend**  
